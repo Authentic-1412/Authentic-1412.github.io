@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Posts | My New Hugo Site</title>
+<meta name="keywords" content="">
+<meta name="description" content="Posts - My New Hugo Site">
+<meta name="author" content="pearl">
+<link rel="canonical" href="http://localhost:1313/posts/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/posts/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="My New Hugo Site (Alt + H)">My New Hugo Site</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Posts
+  </h1>
+</header>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">视觉_K230开发实践
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>记录学习k230的过程
+25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法
+创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2 width ,height ,fps:最大输出图像参数 设置图像输出大小和位置 sensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。 framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸 chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置 sensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。 常用有： RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-11 21:57:27 +0800 CST'>November 11, 2025</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <a class="entry-link" aria-label="post link to 视觉_K230开发实践" href="http://localhost:1313/posts/%E8%A7%86%E8%A7%89-k230%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">个人博客学习笔记
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>个人博客搭建 ==========================================================
+Part 1. hugo搭建并在本地预览 25.11.10. 创建博客总站 新建文件夹，存放你的博客。在该文件夹下运行 hugo new site . -初始化站点
+创建一篇文章 hugo new posts/这篇博客的名字.md
+然后，你可以看到在content/posts目录下多了一个md文档 编辑完成后将draft改为false，否则不在网页上显示 主题 git clone你喜欢的主题，并将文件复制到themes文件夹下 在hugo.toml（参数文档）中增加： theme = “hugo-PaperMod” 别忘记双引号！
+其他设置 在hugo.toml（参数文档）中 [params] description = “my first blog” author = “pearl”
+本地预览 终端输入 hugo server
+打开终端显示的域名即可 25.11.11 1. 补充：wsl中配置代理 之前登录时wsl会提示： wsl: 检测到 localhost 代理配置，但未镜像到 WSL。NAT 模式下的 WSL 不支持 localhost 代理。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-10 00:00:15 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <a class="entry-link" aria-label="post link to 个人博客学习笔记" href="http://localhost:1313/posts/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">My First Post
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Hello World! I have borned!</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-09 22:27:38 +0800 CST'>November 9, 2025</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <a class="entry-link" aria-label="post link to My First Post" href="http://localhost:1313/posts/my-first-post/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">My New Hugo Site</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

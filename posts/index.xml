@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on My New Hugo Site</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on My New Hugo Site</description>
+    <generator>Hugo -- 0.152.2</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 11 Nov 2025 21:57:27 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>视觉_K230开发实践</title>
+      <link>http://localhost:1313/posts/%E8%A7%86%E8%A7%89-k230%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Tue, 11 Nov 2025 21:57:27 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E8%A7%86%E8%A7%89-k230%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5/</guid>
+      <description>&lt;p&gt;&lt;em&gt;记录学习k230的过程&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;251111-准备工作学习摄像模块&#34;&gt;25.11.11 准备工作、学习摄像模块&lt;/h2&gt;
+&lt;h3 id=&#34;准备工作&#34;&gt;准备工作&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;固件烧录&lt;/li&gt;
+&lt;li&gt;例程复现&lt;/li&gt;
+&lt;li&gt;找到了ocr（文字识别）现成例程 &lt;!-- raw HTML omitted --&gt;
+小声：&lt;strong&gt;结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;摄像模块&#34;&gt;摄像模块&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;k230摄像头架构&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;板子最多搭载三个摄像头&lt;/li&gt;
+&lt;li&gt;每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理）&lt;/li&gt;
+&lt;li&gt;每个模块（camera_device）有三个输出通道，可以多输出并行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;摄像头模块编程&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;sensor基础语法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;创建处理模块&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;  from media.sensor import *
+  sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;id：摄像头id，默认为2&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;width ,height ,fps:&lt;strong&gt;最大&lt;/strong&gt;输出图像参数&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;设置图像输出大小和位置&lt;/strong&gt;&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;  sensor.reset() # 初始化sensor对象及传感器
+
+  sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480)
+  sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;framesize参数对应width、height，表示输出图像分辨率，二者作用相同。&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;设置图像怎么输出、输出位置&lt;/strong&gt;&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;  sensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。&lt;!-- raw HTML omitted --&gt;
+常用有：&lt;!-- raw HTML omitted --&gt;
+RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits &lt;!-- raw HTML omitted --&gt;
+RGB888: R G B for 8 bits respectively &lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;水平与竖直反转&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;  sensor.set_hmirror(True) # 水平
+  sensor.set_vflip(False) # 竖直
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;启动、关闭摄像头&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;  sensor.run()
+  sensor.stop()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;多个摄像头只用启动一次，但要分别关闭&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>个人博客学习笔记</title>
+      <link>http://localhost:1313/posts/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 10 Nov 2025 00:00:15 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;h1 id=&#34;个人博客搭建&#34;&gt;个人博客搭建&lt;/h1&gt;
+&lt;p&gt;==========================================================&lt;/p&gt;
+&lt;h2 id=&#34;part-1-hugo搭建并在本地预览&#34;&gt;Part 1. hugo搭建并在本地预览&lt;/h2&gt;
+&lt;h3 id=&#34;251110&#34;&gt;25.11.10.&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;创建博客总站&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;新建文件夹，存放你的博客。在该文件夹下运行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;hugo new site .&lt;!-- raw HTML omitted --&gt;
+-初始化站点&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;创建一篇文章&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;hugo new posts/这篇博客的名字.md&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;然后，你可以看到在content/posts目录下多了一个md文档&lt;/li&gt;
+&lt;li&gt;编辑完成后将draft改为false，否则不在网页上显示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;主题&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;git clone你喜欢的主题，并将文件复制到themes文件夹下&lt;/li&gt;
+&lt;li&gt;在hugo.toml（参数文档）中增加：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;theme = &amp;ldquo;hugo-PaperMod&amp;rdquo;
+&lt;strong&gt;别忘记双引号！&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;其他设置&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;在hugo.toml（参数文档）中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[params]&lt;!-- raw HTML omitted --&gt;
+description = &amp;ldquo;my first blog&amp;rdquo;&lt;!-- raw HTML omitted --&gt;
+author = &amp;ldquo;pearl&amp;rdquo;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;本地预览&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;终端输入&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;hugo server&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;打开终端显示的域名即可&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;251111&#34;&gt;25.11.11&lt;/h3&gt;
+&lt;h4 id=&#34;1-补充wsl中配置代理&#34;&gt;1. 补充：wsl中配置代理&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;之前登录时wsl会提示：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;wsl: 检测到 localhost 代理配置，但未镜像到 WSL。NAT 模式下的 WSL 不支持 localhost 代理。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>My First Post</title>
+      <link>http://localhost:1313/posts/my-first-post/</link>
+      <pubDate>Sun, 09 Nov 2025 22:27:38 +0800</pubDate>
+      <guid>http://localhost:1313/posts/my-first-post/</guid>
+      <description>&lt;h1 id=&#34;hello-world&#34;&gt;Hello World!&lt;/h1&gt;
+&lt;h2 id=&#34;i-have-borned&#34;&gt;I have borned!&lt;/h2&gt;</description>
+    </item>
+  </channel>
+</rss>
