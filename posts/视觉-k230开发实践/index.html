@@ -162,7 +162,14 @@ RGB888: R G B for 8 bits respectively
   <meta property="og:title" content="视觉_K230开发实践">
   <meta property="og:description" content="记录学习k230的过程
 25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法
-创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2 width ,height ,fps:最大输出图像参数 设置图像输出大小和位置 sensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。 framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸 chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置 sensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。 常用有： RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭">
+创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2
+width ,height ,fps:最大输出图像参数 设置图像输出大小和位置
+sensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。
+framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸
+chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置
+sensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。
+常用有：
+RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -286,12 +293,12 @@ RGB888: R G B for 8 bits respectively
   "@type": "BlogPosting",
   "headline": "视觉_K230开发实践",
   "name": "视觉_K230开发实践",
-  "description": "记录学习k230的过程\n25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法\n创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2 width ,height ,fps:最大输出图像参数 设置图像输出大小和位置 sensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。 framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸 chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置 sensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。 常用有： RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭\n",
+  "description": "记录学习k230的过程\n25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法\n创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2\nwidth ,height ,fps:最大输出图像参数 设置图像输出大小和位置\nsensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。\nframesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸\nchn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置\nsensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。\n常用有：\nRGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭\n",
   "keywords": [
     
   ],
-  "articleBody": "记录学习k230的过程\n25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法\n创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2 width ,height ,fps:最大输出图像参数 设置图像输出大小和位置 sensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。 framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸 chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置 sensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。 常用有： RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭\n指定通道截一帧图片 sensor.snapshot(chn=CAM_CHN_ID_0) 默认为0设备0通道\n25.11.13 GPIO GPIO 原理明确\n硬件之间的通信必须经过通信协议，常用的通信协议有IIC\\SPI\\UART\\CAN\\HTTP等等 这些“通信协议”是一种规则，在硬件上的体现为实现信息收发的逻辑电路，可以作为模块嵌入到MPU芯片里。 当然，不是所有的协议都软硬兼修，HTTP协议就是纯软件协议\n名词解释\nP-mos N-mos：三极管，作用相当于受电压控制的开关，它俩区别是，P为低于阈值导通，N为超出阈值导通 串口：特指UART协议的硬件电路部分，信息流向：MPU ——\u003e 引脚 ——\u003e 串口（片内外设的一种） ——\u003e 外接设备（片外外设） （一个串口可能会用到许多引脚） 外设：片内外设：通信协议的硬件逻辑电路模块，集成在芯片内部；片外外设：与芯片连接的模块，在芯片外面 GPIO干嘛用的？ 四大功能：输入、输出、模拟、复用\n输入 片内外设向MPU输入 分类 下拉输入：无外部输入信号时，MPU读到低电平，只有外部输入为高电平时，MPU才能读到高电平 上拉输入：无外部输入信号时，MPU读到高电平，与上面同理 悬空输入：引脚的电平状态完全由外部输入决定 模拟输入：能接受模拟信号，通过ADC（模数转换器）转为数字信号，传递给MPU 输出 MPU向片内外设输出 分类 推挽输出：P-mos、N-mos均工作（不同时工作），可以主动输出高、低电平 开漏输出：只有N-mos工作，只能主动输出低电平，输出高电平要靠上拉电阻拉上去 复用 此时GPIO像一个容器，可以对应连接到MPU内部的IIC、SPI、UART等硬件模块，本质上是把事态、奇偶校验、等等一系列的流程集成到一个硬件模块上，随后该引脚与外设通过对应的协议通信。 一个GPIO不能同时连接多个协议模块，故要通过编程选择。 模拟 通过输入、输出模式配置、电平高低变化模拟通信协议，即把硬件外设的功能通过软件模拟了一遍 总结\nGPIO四大功能：输入、输出、模拟、复用 GPIO可编程，体现为其模拟功能。 25.11.15. -[x] GPIO各功能代码示例\n",
-  "wordCount" : "133",
+  "articleBody": "记录学习k230的过程\n25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法\n创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2\nwidth ,height ,fps:最大输出图像参数 设置图像输出大小和位置\nsensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。\nframesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸\nchn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置\nsensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。\n常用有：\nRGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭\n指定通道截一帧图片 sensor.snapshot(chn=CAM_CHN_ID_0) 默认为0设备0通道\n25.11.13 GPIO GPIO 原理明确\n硬件之间的通信必须经过通信协议，常用的通信协议有IIC\\SPI\\UART\\CAN\\HTTP等等 这些“通信协议”是一种规则，在硬件上的体现为实现信息收发的逻辑电路，可以作为模块嵌入到MPU芯片里。 当然，不是所有的协议都软硬兼修，HTTP协议就是纯软件协议\n名词解释\nP-mos N-mos：三极管，作用相当于受电压控制的开关，它俩区别是，P为低于阈值导通，N为超出阈值导通 串口：特指UART协议的硬件电路部分，信息流向：MPU ——\u003e 引脚 ——\u003e 串口（片内外设的一种） ——\u003e 外接设备（片外外设） （一个串口可能会用到许多引脚） 外设：片内外设：通信协议的硬件逻辑电路模块，集成在芯片内部；片外外设：与芯片连接的模块，在芯片外面 GPIO干嘛用的？\n四大功能：输入、输出、模拟、复用\n输入 片内外设向MPU输入 分类 下拉输入：无外部输入信号时，MPU读到低电平，只有外部输入为高电平时，MPU才能读到高电平 上拉输入：无外部输入信号时，MPU读到高电平，与上面同理 悬空输入：引脚的电平状态完全由外部输入决定 模拟输入：能接受模拟信号，通过ADC（模数转换器）转为数字信号，传递给MPU 输出 MPU向片内外设输出 分类 推挽输出：P-mos、N-mos均工作（不同时工作），可以主动输出高、低电平 开漏输出：只有N-mos工作，只能主动输出低电平，输出高电平要靠上拉电阻拉上去 # micropython from machine import Pin pin = Pin(index, mode, pull=Pin.PULL_NONE, drive=7) machine.Pin ：控制引脚的输入输出状态 index : 引脚编号\nmode:\nPin.IN Pin.OUT\npull:\nPULL_UP PULL_DOWN PULL_NONE(默认) drive: io驱动能力，默认为7\n复用 此时GPIO像一个容器，可以对应连接到MPU内部的IIC、SPI、UART等硬件模块，本质上是把事态、奇偶校验、等等一系列的流程集成到一个硬件模块上，随后该引脚与外设通过对应的协议通信。 一个GPIO不能同时连接多个协议模块，故要通过编程选择。 from machine import FPIOA fpioa = FPIOA() # 实例化 # 查看引脚信息 fpioa.help() # 所有引脚的详细信息 fpioa.help(1) # 引脚1的详细信息 fpioa.help(1,func=False) # 同上 fpioa.help(1,func=True) # 功能1的详细信息（功能编码在 [这里](https://wiki.lckfb.com/zh-hans/lushan-pi-k230/basic/gpio-fpioa.html) # 复用 fpioa.set_founction(3, FPIOA.UART0_TXD) # 把第3个引脚复用为串口TXD脚 fpioa.get_pin_num(FPIOA.UART0_TXD) # fpioa.get_pin_func(63) 模拟 通过输入、输出模式配置、电平高低变化模拟通信协议，即把硬件外设的功能通过软件模拟了一遍 k230的GPIO引脚没有adc，不能模拟\n总结\nGPIO四大功能：输入、输出、模拟、复用 GPIO可编程，体现为其模拟功能。 25.11.15. -[x] GPIO各功能代码示例\n",
+  "wordCount" : "193",
   "inLanguage": "en",
   "datePublished": "2025-11-11T21:57:27+08:00",
   "dateModified": "2025-11-11T21:57:27+08:00",
@@ -364,7 +371,7 @@ RGB888: R G B for 8 bits respectively
 <ol>
 <li>固件烧录</li>
 <li>例程复现</li>
-<li>找到了ocr（文字识别）现成例程 <!-- raw HTML omitted -->
+<li>找到了ocr（文字识别）现成例程 <br>
 小声：<strong>结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢</strong></li>
 </ol>
 <h3 id="摄像模块">摄像模块<a hidden class="anchor" aria-hidden="true" href="#摄像模块">#</a></h3>
@@ -392,12 +399,12 @@ RGB888: R G B for 8 bits respectively
 </code></pre>
 <blockquote>
 <ol>
-<li>id：摄像头id，默认为2<!-- raw HTML omitted --></li>
+<li>id：摄像头id，默认为2<br></li>
 <li>width ,height ,fps:<strong>最大</strong>输出图像参数</li>
 </ol>
 </blockquote>
 <ul>
-<li><strong>设置图像输出大小和位置</strong><!-- raw HTML omitted --></li>
+<li><strong>设置图像输出大小和位置</strong><br></li>
 </ul>
 <blockquote>
 </blockquote>
@@ -408,13 +415,13 @@ RGB888: R G B for 8 bits respectively
 </code></pre>
 <blockquote>
 <ol>
-<li>framesize参数对应width、height，表示输出图像分辨率，二者作用相同。<!-- raw HTML omitted --></li>
-<li>framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸<!-- raw HTML omitted --></li>
+<li>framesize参数对应width、height，表示输出图像分辨率，二者作用相同。<br></li>
+<li>framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸<br></li>
 <li>chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道</li>
 </ol>
 </blockquote>
 <ul>
-<li><strong>设置图像怎么输出、输出位置</strong><!-- raw HTML omitted --></li>
+<li><strong>设置图像怎么输出、输出位置</strong><br></li>
 </ul>
 <blockquote>
 </blockquote>
@@ -422,10 +429,10 @@ RGB888: R G B for 8 bits respectively
 </code></pre>
 <blockquote>
 <ol>
-<li>pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。<!-- raw HTML omitted -->
-常用有：<!-- raw HTML omitted -->
-RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits <!-- raw HTML omitted -->
-RGB888: R G B for 8 bits respectively <!-- raw HTML omitted --></li>
+<li>pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。<br>
+常用有：<br>
+RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits <br>
+RGB888: R G B for 8 bits respectively <br></li>
 </ol>
 </blockquote>
 <ul>
@@ -486,7 +493,7 @@ RGB888: R G B for 8 bits respectively <!-- raw HTML omitted --></li>
 </blockquote>
 <ul>
 <li>
-<p><strong>GPIO干嘛用的？</strong><!-- raw HTML omitted -->
+<p><strong>GPIO干嘛用的？</strong><br>
 <strong>四大功能：输入、输出、模拟、复用</strong></p>
 <ul>
 <li><strong>输入</strong></li>
@@ -514,6 +521,32 @@ RGB888: R G B for 8 bits respectively <!-- raw HTML omitted --></li>
 </ul>
 </li>
 </ol>
+<blockquote>
+</blockquote>
+<pre><code>  # micropython
+  from machine import Pin
+  pin = Pin(index, mode, pull=Pin.PULL_NONE, drive=7)
+</code></pre>
+<blockquote>
+<p><code>machine.Pin</code> ：控制引脚的输入输出状态 <br>
+<code>index</code> : 引脚编号<br>
+<code>mode</code>:</p>
+<ul>
+<li><code>Pin.IN</code></li>
+<li><code>Pin.OUT</code><br></li>
+</ul>
+</blockquote>
+<blockquote>
+<p><code>pull</code>:</p>
+<ul>
+<li><code>PULL_UP</code></li>
+<li><code>PULL_DOWN</code></li>
+<li><code>PULL_NONE</code>(默认)</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><code>drive</code>: io驱动能力，默认为7</p>
+</blockquote>
 <ul>
 <li><strong>复用</strong></li>
 </ul>
@@ -521,12 +554,32 @@ RGB888: R G B for 8 bits respectively <!-- raw HTML omitted --></li>
 <li>此时GPIO像一个<strong>容器</strong>，可以对应连接到MPU内部的IIC、SPI、UART等硬件模块，本质上是把事态、奇偶校验、等等一系列的流程集成到一个硬件模块上，随后该引脚与外设通过对应的协议通信。</li>
 <li>一个GPIO不能同时连接多个协议模块，故要通过编程选择。</li>
 </ol>
+<blockquote>
+</blockquote>
+<pre><code>  from machine import FPIOA
+  fpioa = FPIOA() # 实例化
+
+  # 查看引脚信息
+  fpioa.help() # 所有引脚的详细信息
+  fpioa.help(1) # 引脚1的详细信息
+  fpioa.help(1,func=False) # 同上
+  fpioa.help(1,func=True) # 功能1的详细信息（功能编码在 [这里](https://wiki.lckfb.com/zh-hans/lushan-pi-k230/basic/gpio-fpioa.html)
+
+
+  # 复用
+  fpioa.set_founction(3, FPIOA.UART0_TXD) # 把第3个引脚复用为串口TXD脚
+  fpioa.get_pin_num(FPIOA.UART0_TXD) #
+  fpioa.get_pin_func(63)
+</code></pre>
 <ul>
 <li><strong>模拟</strong></li>
 </ul>
 <ol>
 <li>通过输入、输出模式配置、电平高低变化模拟通信协议，即把硬件外设的功能通过软件模拟了一遍</li>
 </ol>
+<blockquote>
+<p>k230的GPIO引脚没有adc，不能模拟</p>
+</blockquote>
 </li>
 <li>
 <p><strong>总结</strong></p>

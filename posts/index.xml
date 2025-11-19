@@ -6,8 +6,16 @@
     <description>Recent content in Posts on pearl blog</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 11 Nov 2025 21:57:27 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 14 Nov 2025 22:04:56 +0800</lastBuildDate>
     <atom:link href="https://Authentic-1412.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>具身智能经典模型</title>
+      <link>https://Authentic-1412.github.io/posts/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 14 Nov 2025 22:04:56 +0800</pubDate>
+      <guid>https://Authentic-1412.github.io/posts/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B/</guid>
+      <description>&lt;h1 id=&#34;具身智能经典模型综述&#34;&gt;具身智能经典模型综述&lt;/h1&gt;
+&lt;h2 id=&#34;diffusion-policy&#34;&gt;Diffusion Policy&lt;/h2&gt;</description>
+    </item>
     <item>
       <title>视觉_K230开发实践</title>
       <link>https://Authentic-1412.github.io/posts/%E8%A7%86%E8%A7%89-k230%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5/</link>
@@ -19,7 +27,7 @@
 &lt;ol&gt;
 &lt;li&gt;固件烧录&lt;/li&gt;
 &lt;li&gt;例程复现&lt;/li&gt;
-&lt;li&gt;找到了ocr（文字识别）现成例程 &lt;!-- raw HTML omitted --&gt;
+&lt;li&gt;找到了ocr（文字识别）现成例程 &lt;br&gt;
 小声：&lt;strong&gt;结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢&lt;/strong&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;摄像模块&#34;&gt;摄像模块&lt;/h3&gt;
@@ -47,12 +55,12 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
-&lt;li&gt;id：摄像头id，默认为2&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;id：摄像头id，默认为2&lt;br&gt;&lt;/li&gt;
 &lt;li&gt;width ,height ,fps:&lt;strong&gt;最大&lt;/strong&gt;输出图像参数&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;设置图像输出大小和位置&lt;/strong&gt;&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;设置图像输出大小和位置&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;/blockquote&gt;
@@ -63,13 +71,13 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
-&lt;li&gt;framesize参数对应width、height，表示输出图像分辨率，二者作用相同。&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
-&lt;li&gt;framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;framesize参数对应width、height，表示输出图像分辨率，二者作用相同。&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸&lt;br&gt;&lt;/li&gt;
 &lt;li&gt;chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;设置图像怎么输出、输出位置&lt;/strong&gt;&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;设置图像怎么输出、输出位置&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;/blockquote&gt;
@@ -77,10 +85,10 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
-&lt;li&gt;pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。&lt;!-- raw HTML omitted --&gt;
-常用有：&lt;!-- raw HTML omitted --&gt;
-RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits &lt;!-- raw HTML omitted --&gt;
-RGB888: R G B for 8 bits respectively &lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。&lt;br&gt;
+常用有：&lt;br&gt;
+RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits &lt;br&gt;
+RGB888: R G B for 8 bits respectively &lt;br&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 &lt;ul&gt;
@@ -118,7 +126,7 @@ RGB888: R G B for 8 bits respectively &lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
 &lt;li&gt;新建文件夹，存放你的博客。在该文件夹下运行&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
-&lt;p&gt;hugo new site .&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;hugo new site .&lt;br&gt;
 -初始化站点&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;ol start=&#34;2&#34;&gt;
@@ -149,9 +157,9 @@ RGB888: R G B for 8 bits respectively &lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
 &lt;li&gt;在hugo.toml（参数文档）中&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
-&lt;p&gt;[params]&lt;!-- raw HTML omitted --&gt;
-description = &amp;ldquo;my first blog&amp;rdquo;&lt;!-- raw HTML omitted --&gt;
-author = &amp;ldquo;pearl&amp;rdquo;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;[params]&lt;br&gt;
+description = &amp;ldquo;my first blog&amp;rdquo;&lt;br&gt;
+author = &amp;ldquo;pearl&amp;rdquo;&lt;br&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;ol start=&#34;5&#34;&gt;
 &lt;li&gt;本地预览&lt;/li&gt;
@@ -171,7 +179,35 @@ author = &amp;ldquo;pearl&amp;rdquo;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 &lt;li&gt;之前登录时wsl会提示：&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
-&lt;p&gt;wsl: 检测到 localhost 代理配置，但未镜像到 WSL。NAT 模式下的 WSL 不支持 localhost 代理。&lt;/p&gt;</description>
+&lt;p&gt;wsl: 检测到 localhost 代理配置，但未镜像到 WSL。NAT 模式下的 WSL 不支持 localhost 代理。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这句话有两点值得注意&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;NAT模式：相当于wsl2运行在一个小虚拟机中，该虚拟机有自己的ip：通常为172.&lt;/li&gt;
+&lt;li&gt;镜像模式：作为localhost（windows本机）的镜像映射，windows有啥，wsl就有啥&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;配置wsl镜像&#34;&gt;配置WSL镜像&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;windows的用户目录（30743）下新建建立新文件.wslconfig并写入：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;[wsl2]
+
+networkingMode=mirrored&amp;lt;
+
+autoProxy=true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;重启wsl 提示消失，wsl可以访问github&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;part-2-部署到git-page&#34;&gt;Part 2. 部署到git page&lt;/h2&gt;
+&lt;h3 id=&#34;251114&#34;&gt;25.11.14&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;根据网上“hugo + git page”教程配置即可&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>My First Post</title>
