@@ -297,8 +297,8 @@ RGB888: R G B for 8 bits respectively
   "keywords": [
     
   ],
-  "articleBody": "记录学习k230的过程\n25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法\n创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2\nwidth ,height ,fps:最大输出图像参数 设置图像输出大小和位置\nsensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。\nframesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸\nchn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置\nsensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。\n常用有：\nRGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭\n指定通道截一帧图片 sensor.snapshot(chn=CAM_CHN_ID_0) 默认为0设备0通道\n25.11.13 GPIO GPIO 原理明确\n硬件之间的通信必须经过通信协议，常用的通信协议有IIC\\SPI\\UART\\CAN\\HTTP等等 这些“通信协议”是一种规则，在硬件上的体现为实现信息收发的逻辑电路，可以作为模块嵌入到MPU芯片里。 当然，不是所有的协议都软硬兼修，HTTP协议就是纯软件协议\n名词解释\nP-mos N-mos：三极管，作用相当于受电压控制的开关，它俩区别是，P为低于阈值导通，N为超出阈值导通 串口：特指UART协议的硬件电路部分，信息流向：\nMPU ——\u003e 引脚 ——\u003e 串口（片内外设的一种） ——\u003e 外接设备（片外外设） （一个串口可能会用到许多引脚） 外设：片内外设：通信协议的硬件逻辑电路模块，本质上是把数据、奇偶校验、等等一系列的流程集成到一个电路模块上，可以装在芯片内部；片外外设：与芯片连接的模块，在芯片外面 GPIO干嘛用的？\n四大功能：输入、输出、模拟、复用\n输入 片内外设向MPU输入 分类 下拉输入：无外部输入信号时，MPU读到低电平，只有外部输入为高电平时，MPU才能读到高电平 上拉输入：无外部输入信号时，MPU读到高电平，与上面同理 悬空输入：引脚的电平状态完全由外部输入决定 模拟输入：能接受模拟信号，通过ADC（模数转换器）转为数字信号，传递给MPU 输出 MPU向片内外设输出 分类 推挽输出：P-mos、N-mos均工作（不同时工作），可以主动输出高、低电平 开漏输出：只有N-mos工作，只能主动输出低电平，输出高电平要靠上拉电阻拉上去 # micropython from machine import Pin pin = Pin(index, mode, pull=Pin.PULL_NONE, drive=7) machine.Pin ：控制引脚的输入输出状态 index : 引脚编号\nmode:\nPin.IN Pin.OUT\npull:\nPULL_UP PULL_DOWN PULL_NONE(默认) drive: io驱动能力，默认为7\n复用 此时GPIO像一个容器，可以对应连接到MPU内部的IIC、SPI、UART等协议的硬件模块，所谓通信协议的硬件模块，本质上是把数据、奇偶校验、等等一系列的流程集成到一个电路模块上，也就是通信协议的物理层面实现，随后该引脚与片外外设通过对应的协议通信。 一个GPIO不能同时连接多个协议模块，故要通过编程选择。 from machine import FPIOA fpioa = FPIOA() # 实例化 # 查看引脚信息 fpioa.help() # 所有引脚的详细信息 fpioa.help(1) # 引脚1的详细信息 fpioa.help(1,func=False) # 同上 fpioa.help(1,func=True) # 功能1的详细信息（功能编码在 [这里](https://wiki.lckfb.com/zh-hans/lushan-pi-k230/basic/gpio-fpioa.html) # 复用 fpioa.set_founction(3, FPIOA.UART0_TXD) # 把第3个引脚复用为串口0的TX脚 fpioa.get_pin_num(FPIOA.UART0_TXD) # 哪些引脚被配置为UART0_TXD fpioa.get_pin_func(63) # 查看63号引脚的被配置为什么功能 模拟 通过输入、输出模式配置、电平高低变化模拟通信协议，即把硬件外设的功能通过软件模拟了一遍 k230的GPIO引脚没有adc，不能模拟\n总结\nGPIO四大功能：输入、输出、模拟、复用 GPIO可编程，体现为其模拟功能。 25.11.15. GPIO各功能代码示例 25.11.19. UART发送ocr结果 原理明确 不同level的电子设备是不同的圈子，圈子间遵循的通信协议不一样。电脑间遵守USB协议，而嵌入式中一般遵循UART/TTL协议。\n信息的本质是电压变化，TTL（Transistor-Transistor Logic）将电压变化转变为一串0-1信号，而UART（异步串行通信协议）将这串0-1信号按规则进行组织，譬如组织为\n起始位–数据位–校验位–终止位\n随后将组织好的信号传输出去，对面再按这个规则解密就好啦！当然，这是同一圈子内通信\n不同圈子之间通信就要涉及硬件电路了，结合之前片内外设的定义，用硬件电路实现通信并不难理解。比如电脑和单片机间的通信就要通过usb转ttl模块来完成。\nk230端发送数据代码 # k230端发送数据 from libs.PipeLine import PipeLine from libs.AIBase import AIBase from libs.AI2D import Ai2d from libs.Utils import * import os,sys,ujson,gc,math from media.media import * import nncase_runtime as nn import ulab.numpy as np import image import aicube from machine import UART,FPIOA # 自定义OCR检测任务类 class OCRDetectionApp(AIBase): def __init__(self,det_kmodel,model_input_size,mask_threshold=0.5,box_threshold=0.5,rgb888p_size=[1280,720],display_size=[1920,1080],debug_mode=0): super().__init__(det_kmodel,model_input_size,rgb888p_size,debug_mode) # kmodel路径 self.det_kmodel=det_kmodel # OCR检测模型输入分辨率[width,height] self.model_input_size=model_input_size # ocr检测输出feature map二值化阈值 self.mask_threshold=mask_threshold # 检测框分数阈值 self.box_threshold=box_threshold # sensor给到AI的图像分辨率，宽16字节对齐 self.rgb888p_size=[ALIGN_UP(rgb888p_size[0],16),rgb888p_size[1]] # 视频输出VO分辨率，宽16字节对齐 self.display_size=[ALIGN_UP(display_size[0],16),display_size[1]] # debug模式 self.debug_mode=debug_mode # Ai2d实例，用于实现模型预处理 self.ai2d=Ai2d(debug_mode) # 设置Ai2d的输入输出格式和类型 self.ai2d.set_ai2d_dtype(nn.ai2d_format.NCHW_FMT,nn.ai2d_format.NCHW_FMT,np.uint8, np.uint8) # 配置预处理操作，这里使用了pad和resize，Ai2d支持crop/shift/pad/resize/affine，具体代码请打开/sdcard/app/libs/AI2D.py查看 def config_preprocess(self,input_image_size=None): with ScopedTiming(\"set preprocess config\",self.debug_mode \u003e 0): # 初始化ai2d预处理配置，默认为sensor给到AI的尺寸，您可以通过设置input_image_size自行修改输入尺寸 ai2d_input_size=input_image_size if input_image_size else self.rgb888p_size # 计算padding参数 top,bottom,left,right,_=letterbox_pad_param(self.rgb888p_size,self.model_input_size) # 配置padding预处理 self.ai2d.pad([0,0,0,0,top,bottom,left,right], 0, [114,114,114]) # 设置resize预处理 self.ai2d.resize(nn.interp_method.tf_bilinear, nn.interp_mode.half_pixel) # build预处理过程，参数为输入tensor的shape和输出tensor的shape self.ai2d.build([1,3,ai2d_input_size[1],ai2d_input_size[0]],[1,3,self.model_input_size[1],self.model_input_size[0]]) # 自定义当前任务的后处理 def postprocess(self,results): with ScopedTiming(\"postprocess\",self.debug_mode \u003e 0): # chw2hwc hwc_array=self.chw2hwc(self.cur_img) # det_boxes结构为[[crop_array_nhwc,[p1_x,p1_y,p2_x,p2_y,p3_x,p3_y,p4_x,p4_y]],...]，crop_array_nhwc是切割的检测框数据，后八个数据表示检测框的左上，右上，右下，左下的坐标 det_boxes = aicube.ocr_post_process(results[0][:,:,:,0].reshape(-1), hwc_array.reshape(-1),self.model_input_size,self.rgb888p_size, self.mask_threshold, self.box_threshold) # 只取坐标值 all_boxes_pos=[] for det_box in det_boxes: all_boxes_pos.append(det_box[1]) return all_boxes_pos # 绘制推理结果 def draw_result(self,pl,all_boxes_pos): pl.osd_img.clear() # 一次绘制四条边，得到文本检测的四边形，坐标需要从原图分辨率转换成显示分辨率 for i in range(len(all_boxes_pos)): for j in range(4): x1=all_boxes_pos[i][2*j]*self.display_size[0]//self.rgb888p_size[0] y1=all_boxes_pos[i][2*j+1]*self.display_size[1]//self.rgb888p_size[1] x2=all_boxes_pos[i][(2*j+2)%8]*self.display_size[0]//self.rgb888p_size[0] y2=all_boxes_pos[i][(2*j+3)%8]*self.display_size[1]//self.rgb888p_size[1] pl.osd_img.draw_line(int(x1),int(y1),int(x2),int(y2),color=(255,255,0,0),thickness=4) # chw2hwc def chw2hwc(self,features): ori_shape = (features.shape[0], features.shape[1], features.shape[2]) c_hw_ = features.reshape((ori_shape[0], ori_shape[1] * ori_shape[2])) hw_c_ = c_hw_.transpose() new_array = hw_c_.copy() hwc_array = new_array.reshape((ori_shape[1], ori_shape[2], ori_shape[0])) del c_hw_ del hw_c_ del new_array return hwc_array if __name__==\"__main__\": UART_TX_PIN = 11 UART_RX_PIN = 12 UART_ID = 2 BAUDRATE = 115200 # 初始化fpioa和uart fpioa = FPIOA() fpioa.set_function(UART_TX_PIN, FPIOA.UART2_TXD) fpioa.set_function(UART_RX_PIN, FPIOA.UART2_RXD) uart = UART(UART_ID , BAUDRATE) # 添加显示模式，默认hdmi，可选hdmi/lcd/lt9611/st7701/hx8399/nt35516,其中hdmi默认置为lt9611，分辨率1920*1080；lcd默认置为st7701，分辨率800*480 display_mode=\"hdmi\" # OCR检测kmdoel路径 det_kmodel_path=\"/sdcard/examples/ai_test_kmodel/ocr_det_int16.kmodel\" # 初始化PipeLine，只关注传给AI的图像分辨率，显示的分辨率 pl=PipeLine(rgb888p_size=[640,360],display_mode=display_mode) pl.create() display_size=pl.get_display_size() # OCR检测类实例，关注模型输入分辨率，传给AI的图像分辨率，显示的分辨率 ocr_det=OCRDetectionApp(det_kmodel_path,model_input_size=[640,640],rgb888p_size=[640,360],display_size=display_size,debug_mode=0) # 配置预处理过程 ocr_det.config_preprocess() # 发送数据函数，包含数据处理 def send_ocr_data(text, x, y): try: # 数据清洗：去掉文字里可能存在的逗号或换行，防止破坏协议 clean_text = text.replace(',', '.').replace('\\n', '').strip() # 协议格式: @文字,X,Y# packet = \"@{},{},{}#\".format(clean_text, x, y) # 编码并发送 uart.write(packet.encode('utf-8')) # 发送部分 print(f\"[UART发送] {packet}\") # 调试用 except Exception as e: print(f\"发送失败: {e}\") # 发送时间 last_send_time = 0 SEND_INTERVAL_MS = 100 # 发送间隔100ms 每秒最多10张 while True: with ScopedTiming(\"total\",1): # 获取当前帧 img=pl.get_frame() # 推理当前帧获得检测框坐标 boxes=ocr_det.run(img) if boxes: current_time = time.ticks_ms() can_send = (time.ticks_diff(current_time, last_send_time) \u003e= SEND_INTERVAL_MS) # 绘制文本检测框 ocr_det.draw_result(pl,boxes) if can_send: target = boxes[0] # 只发送第一个检测框 raw_text = target.text() # 文本 rect = target.rect() # 检测框四个角的坐标 # 计算检测框中心点坐标 center_x = rect[0] + rect[2] // 2 center_y = rect[1] + rect[3] //2 # 发送检测框中心点坐标 send_ocr_data(raw_text, center_x, center_y) last_send_time = current_time break # 在osd上显示文本检测框 pl.show_image() gc.collect() ocr_det.deinit() pl.destroy() 更改说明： 代码在立创官方ocr例程上改动，仅更改了主程序部分 串口定义。 ",
-  "wordCount" : "564",
+  "articleBody": "记录学习k230的过程\n25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法\n创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2\nwidth ,height ,fps:最大输出图像参数 设置图像输出大小和位置\nsensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。\nframesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸\nchn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置\nsensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。\n常用有：\nRGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭\n指定通道截一帧图片 sensor.snapshot(chn=CAM_CHN_ID_0) 默认为0设备0通道\n25.11.13 GPIO GPIO 原理明确\n硬件之间的通信必须经过通信协议，常用的通信协议有IIC\\SPI\\UART\\CAN\\HTTP等等 这些“通信协议”是一种规则，在硬件上的体现为实现信息收发的逻辑电路，可以作为模块嵌入到MPU芯片里。 当然，不是所有的协议都软硬兼修，HTTP协议就是纯软件协议\n名词解释\nP-mos N-mos：三极管，作用相当于受电压控制的开关，它俩区别是，P为低于阈值导通，N为超出阈值导通 串口：特指UART协议的硬件电路部分，信息流向：\nMPU ——\u003e 引脚 ——\u003e 串口（片内外设的一种） ——\u003e 外接设备（片外外设） （一个串口可能会用到许多引脚） 外设：片内外设：通信协议的硬件逻辑电路模块，本质上是把数据、奇偶校验、等等一系列的流程集成到一个电路模块上，可以装在芯片内部；片外外设：与芯片连接的模块，在芯片外面 GPIO干嘛用的？\n四大功能：输入、输出、模拟、复用\n输入 片内外设向MPU输入 分类 下拉输入：无外部输入信号时，MPU读到低电平，只有外部输入为高电平时，MPU才能读到高电平 上拉输入：无外部输入信号时，MPU读到高电平，与上面同理 悬空输入：引脚的电平状态完全由外部输入决定 模拟输入：能接受模拟信号，通过ADC（模数转换器）转为数字信号，传递给MPU 输出 MPU向片内外设输出 分类 推挽输出：P-mos、N-mos均工作（不同时工作），可以主动输出高、低电平 开漏输出：只有N-mos工作，只能主动输出低电平，输出高电平要靠上拉电阻拉上去 # micropython from machine import Pin pin = Pin(index, mode, pull=Pin.PULL_NONE, drive=7) machine.Pin ：控制引脚的输入输出状态 index : 引脚编号\nmode:\nPin.IN Pin.OUT\npull:\nPULL_UP PULL_DOWN PULL_NONE(默认) drive: io驱动能力，默认为7\n复用 此时GPIO像一个容器，可以对应连接到MPU内部的IIC、SPI、UART等协议的硬件模块，所谓通信协议的硬件模块，本质上是把数据、奇偶校验、等等一系列的流程集成到一个电路模块上，也就是通信协议的物理层面实现，随后该引脚与片外外设通过对应的协议通信。 一个GPIO不能同时连接多个协议模块，故要通过编程选择。 from machine import FPIOA fpioa = FPIOA() # 实例化 # 查看引脚信息 fpioa.help() # 所有引脚的详细信息 fpioa.help(1) # 引脚1的详细信息 fpioa.help(1,func=False) # 同上 fpioa.help(1,func=True) # 功能1的详细信息（功能编码在 [这里](https://wiki.lckfb.com/zh-hans/lushan-pi-k230/basic/gpio-fpioa.html) # 复用 fpioa.set_founction(3, FPIOA.UART0_TXD) # 把第3个引脚复用为串口0的TX脚 fpioa.get_pin_num(FPIOA.UART0_TXD) # 哪些引脚被配置为UART0_TXD fpioa.get_pin_func(63) # 查看63号引脚的被配置为什么功能 模拟 通过输入、输出模式配置、电平高低变化模拟通信协议，即把硬件外设的功能通过软件模拟了一遍 k230的GPIO引脚没有adc，不能模拟\n总结\nGPIO四大功能：输入、输出、模拟、复用 GPIO可编程，体现为其模拟功能。 25.11.15. GPIO各功能代码示例 25.11.19. UART发送ocr结果 原理明确 不同level的电子设备是不同的圈子，圈子间遵循的通信协议不一样。电脑间遵守USB协议，而嵌入式中一般遵循UART/TTL协议。\n信息的本质是电压变化，TTL（Transistor-Transistor Logic）将电压变化转变为一串0-1信号，而UART（异步串行通信协议）将这串0-1信号按规则进行组织，譬如组织为\n起始位–数据位–校验位–终止位\n随后将组织好的信号传输出去，对面再按这个规则解密就好啦！当然，这是同一圈子内通信\n不同圈子之间通信就要涉及硬件电路了，结合之前片内外设的定义，用硬件电路实现通信并不难理解。比如电脑和单片机间的通信就要通过usb转ttl模块来完成。\nk230端发送数据代码 # k230默认生成 import sys for i in range(0, 2): print(\"hello canmv\") print(\"hello \", end=\"canmv\\n\") print(\"implementation:\", sys.implementation) print(\"platform:\", sys.platform) print(\"path:\", sys.path) print(\"Python version:\", sys.version) # ocr源码 ''' 实验名称：字符识别（OCR） 实验平台：01Studio CanMV K230 教程：wiki.01studio.cc 说明：可以通过display=\"xxx\"参数选择\"hdmi\"、\"lcd3_5\"(3.5寸mipi屏)或\"lcd2_4\"(2.4寸mipi屏)显示方式 ''' from libs.PipeLine import PipeLine, ScopedTiming from libs.AIBase import AIBase from libs.AI2D import Ai2d import os import ujson from media.media import * from media.sensor import * from time import * import nncase_runtime as nn import ulab.numpy as np import time import image import aicube import random import gc import sys from machine import UART,FPIOA # 自定义OCR检测类 class OCRDetectionApp(AIBase): def __init__(self, kmodel_path, model_input_size, mask_threshold=0.5, box_threshold=0.2, rgb888p_size=[224,224], display_size=[1920,1080], debug_mode=0): super().__init__(kmodel_path,model_input_size,rgb888p_size,debug_mode) self.kmodel_path=kmodel_path # 模型输入分辨率 self.model_input_size=model_input_size # 分类阈值 self.mask_threshold=mask_threshold self.box_threshold=box_threshold # sensor给到AI的图像分辨率 self.rgb888p_size=[ALIGN_UP(rgb888p_size[0],16),rgb888p_size[1]] # 显示分辨率 self.display_size=[ALIGN_UP(display_size[0],16),display_size[1]] self.debug_mode=debug_mode # Ai2d实例，用于实现模型预处理 self.ai2d=Ai2d(debug_mode) # 设置Ai2d的输入输出格式和类型 self.ai2d.set_ai2d_dtype(nn.ai2d_format.NCHW_FMT,nn.ai2d_format.NCHW_FMT,np.uint8, np.uint8) # 配置预处理操作，这里使用了pad和resize，Ai2d支持crop/shift/pad/resize/affine，具体代码请打开/sdcard/libs/AI2D.py查看 def config_preprocess(self,input_image_size=None): with ScopedTiming(\"set preprocess config\",self.debug_mode \u003e 0): # 初始化ai2d预处理配置，默认为sensor给到AI的尺寸，您可以通过设置input_image_size自行修改输入尺寸 ai2d_input_size=input_image_size if input_image_size else self.rgb888p_size top,bottom,left,right=self.get_padding_param() self.ai2d.pad([0,0,0,0,top,bottom,left,right], 0, [0,0,0]) self.ai2d.resize(nn.interp_method.tf_bilinear, nn.interp_mode.half_pixel) self.ai2d.build([1,3,ai2d_input_size[1],ai2d_input_size[0]],[1,3,self.model_input_size[1],self.model_input_size[0]]) # 自定义当前任务的后处理 def postprocess(self,results): with ScopedTiming(\"postprocess\",self.debug_mode \u003e 0): # chw2hwc hwc_array=self.chw2hwc(self.cur_img) # 这里使用了aicube封装的接口ocr_post_process做后处理,返回的det_boxes结构为[[crop_array_nhwc,[p1_x,p1_y,p2_x,p2_y,p3_x,p3_y,p4_x,p4_y]],...] det_boxes = aicube.ocr_post_process(results[0][:,:,:,0].reshape(-1), hwc_array.reshape(-1),self.model_input_size,self.rgb888p_size, self.mask_threshold, self.box_threshold) return det_boxes # 计算padding参数，在config_preprocess中使用 def get_padding_param(self): # 右padding或下padding dst_w = self.model_input_size[0] dst_h = self.model_input_size[1] input_width = self.rgb888p_size[0] input_high = self.rgb888p_size[1] ratio_w = dst_w / input_width ratio_h = dst_h / input_high if ratio_w \u003c ratio_h: ratio = ratio_w else: ratio = ratio_h new_w = (int)(ratio * input_width) new_h = (int)(ratio * input_high) dw = (dst_w - new_w) / 2 dh = (dst_h - new_h) / 2 top = (int)(round(0)) bottom = (int)(round(dh * 2 + 0.1)) left = (int)(round(0)) right = (int)(round(dw * 2 - 0.1)) return top, bottom, left, right # chw2hwc def chw2hwc(self,features): ori_shape = (features.shape[0], features.shape[1], features.shape[2]) c_hw_ = features.reshape((ori_shape[0], ori_shape[1] * ori_shape[2])) hw_c_ = c_hw_.transpose() new_array = hw_c_.copy() hwc_array = new_array.reshape((ori_shape[1], ori_shape[2], ori_shape[0])) del c_hw_ del hw_c_ del new_array return hwc_array # 自定义OCR识别任务类 class OCRRecognitionApp(AIBase): def __init__(self,kmodel_path,model_input_size,dict_path,rgb888p_size=[1920,1080],display_size=[1920,1080],debug_mode=0): super().__init__(kmodel_path,model_input_size,rgb888p_size,debug_mode) # kmodel路径 self.kmodel_path=kmodel_path # 识别模型输入分辨率 self.model_input_size=model_input_size self.dict_path=dict_path # sensor给到AI的图像分辨率，宽16字节对齐 self.rgb888p_size=[ALIGN_UP(rgb888p_size[0],16),rgb888p_size[1]] # 视频输出VO分辨率，宽16字节对齐 self.display_size=[ALIGN_UP(display_size[0],16),display_size[1]] # debug模式 self.debug_mode=debug_mode self.dict_word=None # 读取OCR的字典 self.read_dict() self.ai2d=Ai2d(debug_mode) self.ai2d.set_ai2d_dtype(nn.ai2d_format.RGB_packed,nn.ai2d_format.NCHW_FMT,np.uint8, np.uint8) # 配置预处理操作，这里使用了pad和resize，Ai2d支持crop/shift/pad/resize/affine，具体代码请打开/sdcard/libs/AI2D.py查看 def config_preprocess(self,input_image_size=None,input_np=None): with ScopedTiming(\"set preprocess config\",self.debug_mode \u003e 0): ai2d_input_size=input_image_size if input_image_size else self.rgb888p_size top,bottom,left,right=self.get_padding_param(ai2d_input_size,self.model_input_size) self.ai2d.pad([0,0,0,0,top,bottom,left,right], 0, [0,0,0]) self.ai2d.resize(nn.interp_method.tf_bilinear, nn.interp_mode.half_pixel) # 如果传入input_np，输入shape为input_np的shape,如果不传入，输入shape为[1,3,ai2d_input_size[1],ai2d_input_size[0]] self.ai2d.build([input_np.shape[0],input_np.shape[1],input_np.shape[2],input_np.shape[3]],[1,3,self.model_input_size[1],self.model_input_size[0]]) # 自定义后处理，results是模型输出的array列表 def postprocess(self,results): with ScopedTiming(\"postprocess\",self.debug_mode \u003e 0): preds = np.argmax(results[0], axis=2).reshape((-1)) output_txt = \"\" for i in range(len(preds)): # 当前识别字符不是字典的最后一个字符并且和前一个字符不重复（去重），加入识别结果字符串 if preds[i] != (len(self.dict_word) - 1) and (not (i \u003e 0 and preds[i - 1] == preds[i])): output_txt = output_txt + self.dict_word[preds[i]] return output_txt # 计算padding参数 def get_padding_param(self,src_size,dst_size): # 右padding或下padding dst_w = dst_size[0] dst_h = dst_size[1] input_width = src_size[0] input_high = src_size[1] ratio_w = dst_w / input_width ratio_h = dst_h / input_high if ratio_w \u003c ratio_h: ratio = ratio_w else: ratio = ratio_h new_w = (int)(ratio * input_width) new_h = (int)(ratio * input_high) dw = (dst_w - new_w) / 2 dh = (dst_h - new_h) / 2 top = (int)(round(0)) bottom = (int)(round(dh * 2 + 0.1)) left = (int)(round(0)) right = (int)(round(dw * 2 - 0.1)) return top, bottom, left, right def read_dict(self): if self.dict_path!=\"\": with open(dict_path, 'r') as file: line_one = file.read(100000) line_list = line_one.split(\"\\r\\n\") self.dict_word = {num: char.replace(\"\\r\", \"\").replace(\"\\n\", \"\") for num, char in enumerate(line_list)} class OCRDetRec: def __init__(self, ocr_det_kmodel, ocr_rec_kmodel, det_input_size, rec_input_size, dict_path, mask_threshold=0.25, box_threshold=0.3, rgb888p_size=[1920,1080], display_size=[1920,1080], debug_mode=0): # OCR检测模型路径 self.ocr_det_kmodel=ocr_det_kmodel # OCR识别模型路径 self.ocr_rec_kmodel=ocr_rec_kmodel # OCR检测模型输入分辨率 self.det_input_size=det_input_size # OCR识别模型输入分辨率 self.rec_input_size=rec_input_size # 字典路径 self.dict_path=dict_path # 置信度阈值 self.mask_threshold=mask_threshold # nms阈值 self.box_threshold=box_threshold # sensor给到AI的图像分辨率，宽16字节对齐 self.rgb888p_size=[ALIGN_UP(rgb888p_size[0],16),rgb888p_size[1]] # 视频输出VO分辨率，宽16字节对齐 self.display_size=[ALIGN_UP(display_size[0],16),display_size[1]] # debug_mode模式 self.debug_mode=debug_mode self.ocr_det=OCRDetectionApp(self.ocr_det_kmodel, model_input_size=self.det_input_size,mask_threshold=self.mask_threshold,box_threshold=self.box_threshold,rgb888p_size=self.rgb888p_size,display_size=self.display_size, debug_mode=0) self.ocr_rec=OCRRecognitionApp(self.ocr_rec_kmodel, model_input_size=self.rec_input_size,dict_path=self.dict_path, rgb888p_size=self.rgb888p_size,display_size=self.display_size) self.ocr_det.config_preprocess() # run函数 def run(self,input_np): # 先进行OCR检测 det_res=self.ocr_det.run(input_np) boxes=[] ocr_res=[] for det in det_res: # 对得到的每个检测框执行OCR识别 self.ocr_rec.config_preprocess(input_image_size=[det[0].shape[2],det[0].shape[1]],input_np=det[0]) ocr_str=self.ocr_rec.run(det[0]) ocr_res.append(ocr_str) boxes.append(det[1]) gc.collect() return boxes,ocr_res # 绘制OCR检测识别效果 def draw_result(self,pl,det_res,rec_res): pl.osd_img.clear() if det_res: # 循环绘制所有检测到的框 for j in range(len(det_res)): # 将原图的坐标点转换成显示的坐标点，循环绘制四条直线，得到一个矩形框 for i in range(4): x1 = det_res[j][(i * 2)] / self.rgb888p_size[0] * self.display_size[0] y1 = det_res[j][(i * 2 + 1)] / self.rgb888p_size[1] * self.display_size[1] x2 = det_res[j][((i + 1) * 2) % 8] / self.rgb888p_size[0] * self.display_size[0] y2 = det_res[j][((i + 1) * 2 + 1) % 8] / self.rgb888p_size[1] * self.display_size[1] pl.osd_img.draw_line((int(x1), int(y1), int(x2), int(y2)), color=(255, 0, 0, 255),thickness=5) # 在检测框位置显示识别的文字 pl.osd_img.draw_string_advanced(int(x1),int(y1),32,rec_res[j],color=(0,0,255)) if __name__==\"__main__\": UART_TX_PIN = 11 UART_RX_PIN = 12 UART_ID = 2 BAUDRATE = 115200 # 初始化fpioa和uart fpioa = FPIOA() fpioa.set_function(UART_TX_PIN, FPIOA.UART2_TXD) fpioa.set_function(UART_RX_PIN, FPIOA.UART2_RXD) uart = UART(UART_ID , BAUDRATE) print(fpioa.help(12)) print(fpioa.help(13)) # 显示模式，可以选择\"hdmi\"、\"lcd3_5\"(3.5寸mipi屏)和\"lcd2_4\"(2.4寸mipi屏) # 配置显示模式 display=\"lcd3_5\" if display==\"hdmi\": display_mode='hdmi' display_size=[1920,1080] elif display==\"lcd3_5\": display_mode= 'st7701' display_size=[800,480] elif display==\"lcd2_4\": display_mode= 'st7701' display_size=[640,480] rgb888p_size=[640,360] #特殊尺寸定义 # OCR检测模型路径 ocr_det_kmodel_path=\"/sdcard/examples/kmodel/ocr_det_int16.kmodel\" # OCR识别模型路径 ocr_rec_kmodel_path=\"/sdcard/examples/kmodel/ocr_rec_int16.kmodel\" # 其他参数 dict_path=\"/sdcard/examples/utils/dict.txt\" # 系统参数 不可改 ocr_det_input_size=[640,640] ocr_rec_input_size=[512,32] # 可改 mask_threshold=0.25 box_threshold=0.3 # 初始化PipeLine，只关注传给AI的图像分辨率，显示的分辨率 pl=PipeLine(rgb888p_size=rgb888p_size, display_size=display_size, display_mode=display_mode) if display ==\"lcd2_4\": pl.create(Sensor(width=1280, height=960)) # 创建PipeLine实例，画面4:3 else: pl.create(Sensor(width=1920, height=1080)) # 创建PipeLine实例 ocr=OCRDetRec(ocr_det_kmodel_path, ocr_rec_kmodel_path, det_input_size=ocr_det_input_size,rec_input_size=ocr_rec_input_size, dict_path=dict_path, mask_threshold=mask_threshold, box_threshold=box_threshold, rgb888p_size=rgb888p_size, display_size=display_size) clock = time.clock() # 发送数据的细节处理函数 def send_ocr_data(text, x, y): try: # 数据清洗：去掉文字里可能存在的逗号或换行，防止破坏协议 clean_text = text.replace(',', '.').replace('\\n', '').strip() # 针对字符串类型数据 # 协议格式: @文字,X,Y# packet = \"@{},{},{}#\".format(clean_text, x, y) # 编码并发送 uart.write(packet.encode('utf-8')) print(f\"[UART发送] {packet}\") # 调试用 except Exception as e: print(f\"发送失败: {e}\") # 发送时间 last_send_time = 0 SEND_INTERVAL_MS = 100 # 发送间隔100ms 每秒最多10张 while True: # clock.tick() os.exitpoint() # 防卡死机制 img=pl.get_frame() # 获取当前帧 boxes,rec_res=ocr.run(img) # 推理当前帧 if boxes: ocr.draw_result(pl,boxes,rec_res) # 绘制当前帧推理结果 print(boxes,rec_res) # 打印结果 pl.show_image() # 展示当前帧推理结果 current_time = time.ticks_ms() can_send = (time.ticks_diff(current_time, last_send_time) \u003e= SEND_INTERVAL_MS) if can_send: # target = det_res[0] # 只发送第一个检测框 raw_text = rec_res[0] # 文本 rect = boxes[0] # 检测框四个角的坐标 # 计算检测框中心点坐标 center_x = (rect[0] + rect[2] + rect[4] + rect[6]) / 4 center_y = (rect[1] + rect[3] + rect[5] + rect[7]) / 4 # 2. 新增：转换为 STM32 的 240x320 坐标 # 原图宽 640 -\u003e 目标宽 240 scaled_x = int((center_x / 640) * 1920) # 原图高 360 -\u003e 目标高 320 scaled_y = int((center_y / 360) * 1080) # 发送检测框中心点坐标 send_ocr_data(raw_text, scaled_x, scaled_y) last_send_time = current_time gc.collect() 更改说明\n代码在0-1studio官方ocr例程上改动，更改了主程序部分，添加工具函数send_ocr_data 串口定义 发送逻辑(主函数)：\n捕捉当前帧 ——\u003e 推理识别 ——\u003e 满足发送条件（时间间隔）——\u003e 发送\n分辨率变化流：\nSensor input (1920*1080) —\u003e Pipeline (rgb888p：640*360) —\u003e orc_dec input(640*640) —\u003e orc_rec input(512*32) —\u003e output(640*360) —\u003e send (1920*1080)\nstm32接收到一个坐标和对应的字符串，它需要确定这个坐标数字在实际视野中的位置，也就是比例，故需要事先告诉stm32视野的范围为多少，也就是send时发送的坐标所使用的坐标系（也就是分辨率），它可以为任意（即通过主函数中转换坐标部分实现），声明清楚接受到的数字的“地图边界”是几，即可计算比例与转动角度。 代码心得\n找到代码逻辑：\n从主函数开始看，搞懂每一行的作用，并链接到哪个模块实现了这个功能 对各个模块，也就是各个类、实例、方法总体浏览一遍，搞懂每个模块的作用，一句话写注释 参数传递（重要！） 模块之间层层嵌套，要理清爽数据流（输入数据经过哪些模块、哪些处理，变成怎样的输出）。分清形参和实参，别被名字骗了 有一些逻辑是打包封装好的，譬如Pipeline中的pl.create(),这种背后的工作流就会藏得很深，慢慢修炼吧~\n",
+  "wordCount" : "1157",
   "inLanguage": "en",
   "datePublished": "2025-11-11T21:57:27+08:00",
   "dateModified": "2025-11-11T21:57:27+08:00",
@@ -618,55 +618,79 @@ MPU ——&gt; 引脚 ——&gt; 串口（片内外设的一种） ——&gt; �
 <h3 id="k230端发送数据代码">k230端发送数据代码<a hidden class="anchor" aria-hidden="true" href="#k230端发送数据代码">#</a></h3>
 <blockquote>
 </blockquote>
-<pre><code># k230端发送数据
-from libs.PipeLine import PipeLine
+<pre><code># k230默认生成
+import sys
+
+for i in range(0, 2):
+    print(&quot;hello canmv&quot;)
+    print(&quot;hello &quot;, end=&quot;canmv\n&quot;)
+
+print(&quot;implementation:&quot;, sys.implementation)
+print(&quot;platform:&quot;, sys.platform)
+print(&quot;path:&quot;, sys.path)
+print(&quot;Python version:&quot;, sys.version)
+
+# ocr源码
+'''
+实验名称：字符识别（OCR）
+实验平台：01Studio CanMV K230
+教程：wiki.01studio.cc
+说明：可以通过display=&quot;xxx&quot;参数选择&quot;hdmi&quot;、&quot;lcd3_5&quot;(3.5寸mipi屏)或&quot;lcd2_4&quot;(2.4寸mipi屏)显示方式
+'''
+
+from libs.PipeLine import PipeLine, ScopedTiming
 from libs.AIBase import AIBase
 from libs.AI2D import Ai2d
-from libs.Utils import *
-import os,sys,ujson,gc,math
+import os
+import ujson
 from media.media import *
+from media.sensor import *
+from time import *
 import nncase_runtime as nn
 import ulab.numpy as np
+import time
 import image
 import aicube
-
+import random
+import gc
+import sys
 from machine import UART,FPIOA
 
-# 自定义OCR检测任务类
+# 自定义OCR检测类
 class OCRDetectionApp(AIBase):
-    def __init__(self,det_kmodel,model_input_size,mask_threshold=0.5,box_threshold=0.5,rgb888p_size=[1280,720],display_size=[1920,1080],debug_mode=0):
-        super().__init__(det_kmodel,model_input_size,rgb888p_size,debug_mode)
-        # kmodel路径
-        self.det_kmodel=det_kmodel
-        # OCR检测模型输入分辨率[width,height]
+    def __init__(self,
+                kmodel_path,
+                model_input_size,
+                mask_threshold=0.5,
+                box_threshold=0.2,
+                rgb888p_size=[224,224],
+                display_size=[1920,1080],
+                debug_mode=0):
+        super().__init__(kmodel_path,model_input_size,rgb888p_size,debug_mode)
+        self.kmodel_path=kmodel_path
+        # 模型输入分辨率
         self.model_input_size=model_input_size
-        # ocr检测输出feature map二值化阈值
+        # 分类阈值
         self.mask_threshold=mask_threshold
-        # 检测框分数阈值
         self.box_threshold=box_threshold
-        # sensor给到AI的图像分辨率，宽16字节对齐
+        # sensor给到AI的图像分辨率
         self.rgb888p_size=[ALIGN_UP(rgb888p_size[0],16),rgb888p_size[1]]
-        # 视频输出VO分辨率，宽16字节对齐
+        # 显示分辨率
         self.display_size=[ALIGN_UP(display_size[0],16),display_size[1]]
-        # debug模式
         self.debug_mode=debug_mode
         # Ai2d实例，用于实现模型预处理
         self.ai2d=Ai2d(debug_mode)
         # 设置Ai2d的输入输出格式和类型
         self.ai2d.set_ai2d_dtype(nn.ai2d_format.NCHW_FMT,nn.ai2d_format.NCHW_FMT,np.uint8, np.uint8)
 
-    # 配置预处理操作，这里使用了pad和resize，Ai2d支持crop/shift/pad/resize/affine，具体代码请打开/sdcard/app/libs/AI2D.py查看
+    # 配置预处理操作，这里使用了pad和resize，Ai2d支持crop/shift/pad/resize/affine，具体代码请打开/sdcard/libs/AI2D.py查看
     def config_preprocess(self,input_image_size=None):
         with ScopedTiming(&quot;set preprocess config&quot;,self.debug_mode &gt; 0):
             # 初始化ai2d预处理配置，默认为sensor给到AI的尺寸，您可以通过设置input_image_size自行修改输入尺寸
             ai2d_input_size=input_image_size if input_image_size else self.rgb888p_size
-            # 计算padding参数
-            top,bottom,left,right,_=letterbox_pad_param(self.rgb888p_size,self.model_input_size)
-            # 配置padding预处理
-            self.ai2d.pad([0,0,0,0,top,bottom,left,right], 0, [114,114,114])
-            # 设置resize预处理
+            top,bottom,left,right=self.get_padding_param()
+            self.ai2d.pad([0,0,0,0,top,bottom,left,right], 0, [0,0,0])
             self.ai2d.resize(nn.interp_method.tf_bilinear, nn.interp_mode.half_pixel)
-            # build预处理过程，参数为输入tensor的shape和输出tensor的shape
             self.ai2d.build([1,3,ai2d_input_size[1],ai2d_input_size[0]],[1,3,self.model_input_size[1],self.model_input_size[0]])
 
     # 自定义当前任务的后处理
@@ -674,25 +698,32 @@ class OCRDetectionApp(AIBase):
         with ScopedTiming(&quot;postprocess&quot;,self.debug_mode &gt; 0):
             # chw2hwc
             hwc_array=self.chw2hwc(self.cur_img)
-            # det_boxes结构为[[crop_array_nhwc,[p1_x,p1_y,p2_x,p2_y,p3_x,p3_y,p4_x,p4_y]],...]，crop_array_nhwc是切割的检测框数据，后八个数据表示检测框的左上，右上，右下，左下的坐标
+            # 这里使用了aicube封装的接口ocr_post_process做后处理,返回的det_boxes结构为[[crop_array_nhwc,[p1_x,p1_y,p2_x,p2_y,p3_x,p3_y,p4_x,p4_y]],...]
             det_boxes = aicube.ocr_post_process(results[0][:,:,:,0].reshape(-1), hwc_array.reshape(-1),self.model_input_size,self.rgb888p_size, self.mask_threshold, self.box_threshold)
-            # 只取坐标值
-            all_boxes_pos=[]
-            for det_box in det_boxes:
-                all_boxes_pos.append(det_box[1])
-            return all_boxes_pos
+            return det_boxes
 
-    # 绘制推理结果
-    def draw_result(self,pl,all_boxes_pos):
-        pl.osd_img.clear()
-        # 一次绘制四条边，得到文本检测的四边形，坐标需要从原图分辨率转换成显示分辨率
-        for i in range(len(all_boxes_pos)):
-            for j in range(4):
-                x1=all_boxes_pos[i][2*j]*self.display_size[0]//self.rgb888p_size[0]
-                y1=all_boxes_pos[i][2*j+1]*self.display_size[1]//self.rgb888p_size[1]
-                x2=all_boxes_pos[i][(2*j+2)%8]*self.display_size[0]//self.rgb888p_size[0]
-                y2=all_boxes_pos[i][(2*j+3)%8]*self.display_size[1]//self.rgb888p_size[1]
-                pl.osd_img.draw_line(int(x1),int(y1),int(x2),int(y2),color=(255,255,0,0),thickness=4)
+    # 计算padding参数，在config_preprocess中使用
+    def get_padding_param(self):
+        # 右padding或下padding
+        dst_w = self.model_input_size[0]
+        dst_h = self.model_input_size[1]
+        input_width = self.rgb888p_size[0]
+        input_high = self.rgb888p_size[1]
+        ratio_w = dst_w / input_width
+        ratio_h = dst_h / input_high
+        if ratio_w &lt; ratio_h:
+            ratio = ratio_w
+        else:
+            ratio = ratio_h
+        new_w = (int)(ratio * input_width)
+        new_h = (int)(ratio * input_high)
+        dw = (dst_w - new_w) / 2
+        dh = (dst_h - new_h) / 2
+        top = (int)(round(0))
+        bottom = (int)(round(dh * 2 + 0.1))
+        left = (int)(round(0))
+        right = (int)(round(dw * 2 - 0.1))
+        return  top, bottom, left, right
 
     # chw2hwc
     def chw2hwc(self,features):
@@ -706,98 +737,323 @@ class OCRDetectionApp(AIBase):
         del new_array
         return hwc_array
 
+# 自定义OCR识别任务类
+class OCRRecognitionApp(AIBase):
+    def __init__(self,kmodel_path,model_input_size,dict_path,rgb888p_size=[1920,1080],display_size=[1920,1080],debug_mode=0):
+        super().__init__(kmodel_path,model_input_size,rgb888p_size,debug_mode)
+        # kmodel路径
+        self.kmodel_path=kmodel_path
+        # 识别模型输入分辨率
+        self.model_input_size=model_input_size
+        self.dict_path=dict_path
+        # sensor给到AI的图像分辨率，宽16字节对齐
+        self.rgb888p_size=[ALIGN_UP(rgb888p_size[0],16),rgb888p_size[1]]
+        # 视频输出VO分辨率，宽16字节对齐
+        self.display_size=[ALIGN_UP(display_size[0],16),display_size[1]]
+        # debug模式
+        self.debug_mode=debug_mode
+        self.dict_word=None
+        # 读取OCR的字典
+        self.read_dict()
+        self.ai2d=Ai2d(debug_mode)
+        self.ai2d.set_ai2d_dtype(nn.ai2d_format.RGB_packed,nn.ai2d_format.NCHW_FMT,np.uint8, np.uint8)
+
+    # 配置预处理操作，这里使用了pad和resize，Ai2d支持crop/shift/pad/resize/affine，具体代码请打开/sdcard/libs/AI2D.py查看
+    def config_preprocess(self,input_image_size=None,input_np=None):
+        with ScopedTiming(&quot;set preprocess config&quot;,self.debug_mode &gt; 0):
+            ai2d_input_size=input_image_size if input_image_size else self.rgb888p_size
+            top,bottom,left,right=self.get_padding_param(ai2d_input_size,self.model_input_size)
+            self.ai2d.pad([0,0,0,0,top,bottom,left,right], 0, [0,0,0])
+            self.ai2d.resize(nn.interp_method.tf_bilinear, nn.interp_mode.half_pixel)
+            # 如果传入input_np，输入shape为input_np的shape,如果不传入，输入shape为[1,3,ai2d_input_size[1],ai2d_input_size[0]]
+            self.ai2d.build([input_np.shape[0],input_np.shape[1],input_np.shape[2],input_np.shape[3]],[1,3,self.model_input_size[1],self.model_input_size[0]])
+
+    # 自定义后处理，results是模型输出的array列表
+    def postprocess(self,results):
+        with ScopedTiming(&quot;postprocess&quot;,self.debug_mode &gt; 0):
+            preds = np.argmax(results[0], axis=2).reshape((-1))
+            output_txt = &quot;&quot;
+            for i in range(len(preds)):
+                # 当前识别字符不是字典的最后一个字符并且和前一个字符不重复（去重），加入识别结果字符串
+                if preds[i] != (len(self.dict_word) - 1) and (not (i &gt; 0 and preds[i - 1] == preds[i])):
+                    output_txt = output_txt + self.dict_word[preds[i]]
+            return output_txt
+
+    # 计算padding参数
+    def get_padding_param(self,src_size,dst_size):
+        # 右padding或下padding
+        dst_w = dst_size[0]
+        dst_h = dst_size[1]
+        input_width = src_size[0]
+        input_high = src_size[1]
+        ratio_w = dst_w / input_width
+        ratio_h = dst_h / input_high
+        if ratio_w &lt; ratio_h:
+            ratio = ratio_w
+        else:
+            ratio = ratio_h
+        new_w = (int)(ratio * input_width)
+        new_h = (int)(ratio * input_high)
+        dw = (dst_w - new_w) / 2
+        dh = (dst_h - new_h) / 2
+        top = (int)(round(0))
+        bottom = (int)(round(dh * 2 + 0.1))
+        left = (int)(round(0))
+        right = (int)(round(dw * 2 - 0.1))
+        return  top, bottom, left, right
+
+    def read_dict(self):
+        if self.dict_path!=&quot;&quot;:
+            with open(dict_path, 'r') as file:
+                line_one = file.read(100000)
+                line_list = line_one.split(&quot;\r\n&quot;)
+            self.dict_word = {num: char.replace(&quot;\r&quot;, &quot;&quot;).replace(&quot;\n&quot;, &quot;&quot;) for num, char in enumerate(line_list)}
+
+
+class OCRDetRec:
+    def __init__(self,
+                ocr_det_kmodel,
+                ocr_rec_kmodel,
+                det_input_size,
+                rec_input_size,
+                dict_path,
+                mask_threshold=0.25,
+                box_threshold=0.3,
+                rgb888p_size=[1920,1080],
+                display_size=[1920,1080],
+                debug_mode=0):
+        # OCR检测模型路径
+        self.ocr_det_kmodel=ocr_det_kmodel
+        # OCR识别模型路径
+        self.ocr_rec_kmodel=ocr_rec_kmodel
+        # OCR检测模型输入分辨率
+        self.det_input_size=det_input_size
+        # OCR识别模型输入分辨率
+        self.rec_input_size=rec_input_size
+        # 字典路径
+        self.dict_path=dict_path
+        # 置信度阈值
+        self.mask_threshold=mask_threshold
+        # nms阈值
+        self.box_threshold=box_threshold
+        # sensor给到AI的图像分辨率，宽16字节对齐
+        self.rgb888p_size=[ALIGN_UP(rgb888p_size[0],16),rgb888p_size[1]]
+        # 视频输出VO分辨率，宽16字节对齐
+        self.display_size=[ALIGN_UP(display_size[0],16),display_size[1]]
+        # debug_mode模式
+        self.debug_mode=debug_mode
+        
+        
+        self.ocr_det=OCRDetectionApp(self.ocr_det_kmodel,
+                                    model_input_size=self.det_input_size,mask_threshold=self.mask_threshold,box_threshold=self.box_threshold,rgb888p_size=self.rgb888p_size,display_size=self.display_size,
+                                    debug_mode=0)
+        
+        self.ocr_rec=OCRRecognitionApp(self.ocr_rec_kmodel,
+                                    model_input_size=self.rec_input_size,dict_path=self.dict_path,
+                                    rgb888p_size=self.rgb888p_size,display_size=self.display_size)
+        self.ocr_det.config_preprocess()
+
+    # run函数
+    def run(self,input_np):
+        # 先进行OCR检测
+        det_res=self.ocr_det.run(input_np)
+        boxes=[]
+        ocr_res=[]
+        for det in det_res:
+            # 对得到的每个检测框执行OCR识别
+            self.ocr_rec.config_preprocess(input_image_size=[det[0].shape[2],det[0].shape[1]],input_np=det[0])
+            ocr_str=self.ocr_rec.run(det[0])
+            ocr_res.append(ocr_str)
+            boxes.append(det[1])
+            gc.collect()
+        return boxes,ocr_res
+
+    # 绘制OCR检测识别效果
+    def draw_result(self,pl,det_res,rec_res):
+        pl.osd_img.clear()
+        if det_res:
+            # 循环绘制所有检测到的框
+            for j in range(len(det_res)):
+                # 将原图的坐标点转换成显示的坐标点，循环绘制四条直线，得到一个矩形框
+                for i in range(4):
+                    x1 = det_res[j][(i * 2)] / self.rgb888p_size[0] * self.display_size[0]
+                    y1 = det_res[j][(i * 2 + 1)] / self.rgb888p_size[1] * self.display_size[1]
+                    x2 = det_res[j][((i + 1) * 2) % 8] / self.rgb888p_size[0] * self.display_size[0]
+                    y2 = det_res[j][((i + 1) * 2 + 1) % 8] / self.rgb888p_size[1] * self.display_size[1]
+                    pl.osd_img.draw_line((int(x1), int(y1), int(x2), int(y2)), color=(255, 0, 0, 255),thickness=5)
+
+                # 在检测框位置显示识别的文字
+                pl.osd_img.draw_string_advanced(int(x1),int(y1),32,rec_res[j],color=(0,0,255))
 
 
 if __name__==&quot;__main__&quot;:
+
+
     UART_TX_PIN = 11
     UART_RX_PIN = 12
     UART_ID = 2
     BAUDRATE = 115200
-    
+
     # 初始化fpioa和uart
     fpioa = FPIOA()
     fpioa.set_function(UART_TX_PIN, FPIOA.UART2_TXD)
     fpioa.set_function(UART_RX_PIN, FPIOA.UART2_RXD)
     uart = UART(UART_ID , BAUDRATE)
 
+    print(fpioa.help(12))
+    print(fpioa.help(13))
 
+
+    # 显示模式，可以选择&quot;hdmi&quot;、&quot;lcd3_5&quot;(3.5寸mipi屏)和&quot;lcd2_4&quot;(2.4寸mipi屏)
+    # 配置显示模式
+    display=&quot;lcd3_5&quot;
+
+    if display==&quot;hdmi&quot;:
+        display_mode='hdmi'
+        display_size=[1920,1080]
+
+    elif display==&quot;lcd3_5&quot;:
+        display_mode= 'st7701'
+        display_size=[800,480]
+
+    elif display==&quot;lcd2_4&quot;:
+        display_mode= 'st7701'
+        display_size=[640,480]
+
+    rgb888p_size=[640,360] #特殊尺寸定义 
     
-    # 添加显示模式，默认hdmi，可选hdmi/lcd/lt9611/st7701/hx8399/nt35516,其中hdmi默认置为lt9611，分辨率1920*1080；lcd默认置为st7701，分辨率800*480
-    display_mode=&quot;hdmi&quot;
     
-    # OCR检测kmdoel路径
-    det_kmodel_path=&quot;/sdcard/examples/ai_test_kmodel/ocr_det_int16.kmodel&quot;
+
+    # OCR检测模型路径
+    ocr_det_kmodel_path=&quot;/sdcard/examples/kmodel/ocr_det_int16.kmodel&quot;
+    # OCR识别模型路径
+    ocr_rec_kmodel_path=&quot;/sdcard/examples/kmodel/ocr_rec_int16.kmodel&quot;
+    # 其他参数
+    dict_path=&quot;/sdcard/examples/utils/dict.txt&quot;
+
+    # 系统参数 不可改
+    ocr_det_input_size=[640,640]
+    ocr_rec_input_size=[512,32]
+    
+    # 可改
+    mask_threshold=0.25
+    box_threshold=0.3
+
     # 初始化PipeLine，只关注传给AI的图像分辨率，显示的分辨率
-    pl=PipeLine(rgb888p_size=[640,360],display_mode=display_mode)
-    pl.create()
-    display_size=pl.get_display_size()
-    # OCR检测类实例，关注模型输入分辨率，传给AI的图像分辨率，显示的分辨率
-    ocr_det=OCRDetectionApp(det_kmodel_path,model_input_size=[640,640],rgb888p_size=[640,360],display_size=display_size,debug_mode=0)
-    # 配置预处理过程
-    ocr_det.config_preprocess()
-
-
+    pl=PipeLine(rgb888p_size=rgb888p_size,
+                display_size=display_size,
+                display_mode=display_mode)
     
-    # 发送数据函数，包含数据处理
+    
+    if display ==&quot;lcd2_4&quot;:
+        pl.create(Sensor(width=1280, height=960))  # 创建PipeLine实例，画面4:3
+
+    else:
+        pl.create(Sensor(width=1920, height=1080))  # 创建PipeLine实例
+        
+        
+    ocr=OCRDetRec(ocr_det_kmodel_path,
+                ocr_rec_kmodel_path,
+                det_input_size=ocr_det_input_size,rec_input_size=ocr_rec_input_size,
+                dict_path=dict_path,
+                mask_threshold=mask_threshold,
+                box_threshold=box_threshold,
+                rgb888p_size=rgb888p_size,
+                display_size=display_size)
+
+    clock = time.clock()
+
+
+    # 发送数据的细节处理函数
     def send_ocr_data(text, x, y):
         try:
             # 数据清洗：去掉文字里可能存在的逗号或换行，防止破坏协议
-            clean_text = text.replace(',', '.').replace('\n', '').strip()
-            
+            clean_text = text.replace(',', '.').replace('\n', '').strip() # 针对字符串类型数据
+
             # 协议格式: @文字,X,Y#
             packet = &quot;@{},{},{}#&quot;.format(clean_text, x, y)
-            
+
             # 编码并发送
-            uart.write(packet.encode('utf-8')) # 发送部分
+            uart.write(packet.encode('utf-8'))
             print(f&quot;[UART发送] {packet}&quot;) # 调试用
         except Exception as e:
             print(f&quot;发送失败: {e}&quot;)
-            
-    # 发送时间       
+
+    # 发送时间
     last_send_time = 0
     SEND_INTERVAL_MS = 100 # 发送间隔100ms 每秒最多10张
-    
-    
-    while True:
-        with ScopedTiming(&quot;total&quot;,1):
-            # 获取当前帧
-            img=pl.get_frame()
-            # 推理当前帧获得检测框坐标
-            boxes=ocr_det.run(img)
-            if boxes:
-                current_time = time.ticks_ms()
-                can_send = (time.ticks_diff(current_time, last_send_time) &gt;= SEND_INTERVAL_MS)
-                
-                # 绘制文本检测框
-                ocr_det.draw_result(pl,boxes)
-                if can_send:
-                    target = boxes[0]  # 只发送第一个检测框
-                    raw_text = target.text() # 文本
-                    rect = target.rect() # 检测框四个角的坐标
-                    # 计算检测框中心点坐标
-                    center_x = rect[0] + rect[2] // 2
-                    center_y = rect[1] + rect[3] //2
-                    # 发送检测框中心点坐标
-                    send_ocr_data(raw_text, center_x, center_y)
-                    last_send_time = current_time
-                    break
 
-            
-            # 在osd上显示文本检测框
-            pl.show_image()
-            gc.collect()
-    ocr_det.deinit()
-    pl.destroy()
+    while True:
+
+        # clock.tick()
+        os.exitpoint()  # 防卡死机制
+
+        img=pl.get_frame()                  # 获取当前帧
+        boxes,rec_res=ocr.run(img)        # 推理当前帧
+        if boxes:
+
+            ocr.draw_result(pl,boxes,rec_res) # 绘制当前帧推理结果
+            print(boxes,rec_res)              # 打印结果
+            pl.show_image()                     # 展示当前帧推理结果
+            current_time = time.ticks_ms()
+            can_send = (time.ticks_diff(current_time, last_send_time) &gt;= SEND_INTERVAL_MS)
+
+            if can_send:
+                    # target = det_res[0]  # 只发送第一个检测框
+                    raw_text = rec_res[0] # 文本
+                    rect = boxes[0] # 检测框四个角的坐标
+                    # 计算检测框中心点坐标
+                    center_x = (rect[0] + rect[2] + rect[4] + rect[6]) / 4
+                    center_y = (rect[1] + rect[3] + rect[5] + rect[7]) / 4
+
+                    # 2. 新增：转换为 STM32 的 240x320 坐标
+                    # 原图宽 640 -&gt; 目标宽 240
+                    scaled_x = int((center_x / 640) * 1920)
+                    # 原图高 360 -&gt; 目标高 320 
+                    scaled_y = int((center_y / 360) * 1080)
+                    # 发送检测框中心点坐标
+                    send_ocr_data(raw_text, scaled_x, scaled_y)
+                    last_send_time = current_time
+
+
+        gc.collect()
 </code></pre>
 <ul>
-<li><strong>更改说明：</strong></li>
-</ul>
-<blockquote>
+<li>
+<p><strong>更改说明</strong></p>
 <ol>
-<li>代码在立创官方ocr例程上改动，仅更改了主程序部分</li>
-<li>串口定义。</li>
-</ol>
+<li>代码在0-1studio官方ocr例程上改动，更改了主程序部分，添加工具函数<code>send_ocr_data</code></li>
+<li>串口定义</li>
+<li>发送逻辑(主函数)：<br>
+<blockquote>
+<p>捕捉当前帧 ——&gt; 推理识别 ——&gt; 满足发送条件（时间间隔）——&gt; 发送</p>
 </blockquote>
+</li>
+<li>分辨率变化流：<br>
+<blockquote>
+<p>Sensor input (1920*1080) &mdash;&gt; Pipeline (rgb888p：640*360) &mdash;&gt; orc_dec input(640*640) &mdash;&gt; orc_rec input(512*32) &mdash;&gt; output(640*360) &mdash;&gt; send (1920*1080)<br></p>
+</blockquote>
+</li>
+<li>stm32接收到一个坐标和对应的字符串，它需要确定这个坐标数字在实际视野中的位置，也就是比例，故需要事先告诉stm32视野的范围为多少，也就是send时发送的坐标所使用的坐标系（也就是分辨率），它可以为任意（即通过主函数中转换坐标部分实现），声明清楚接受到的数字的“地图边界”是几，即可计算比例与转动角度。</li>
+</ol>
+</li>
+<li>
+<p><strong>代码心得</strong></p>
+<ul>
+<li>
+<p>找到代码逻辑：</p>
+<ul>
+<li>从主函数开始看，搞懂每一行的作用，并链接到哪个模块实现了这个功能</li>
+<li>对各个模块，也就是各个类、实例、方法总体浏览一遍，搞懂每个模块的作用，一句话写注释</li>
+<li><strong>参数传递（重要！）</strong> 模块之间层层嵌套，要理清爽数据流（输入数据经过哪些模块、哪些处理，变成怎样的输出）。分清形参和实参，别被名字骗了</li>
+</ul>
+</li>
+<li>
+<p>有一些逻辑是打包封装好的，譬如Pipeline中的pl.create(),这种背后的工作流就会藏得很深，慢慢修炼吧~</p>
+</li>
+</ul>
+</li>
+</ul>
 
 
   </div>
