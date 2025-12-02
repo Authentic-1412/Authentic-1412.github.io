@@ -59,8 +59,18 @@
 &lt;li&gt;算法：在每一轮迭代中都找到$\Delta v$&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;c-经典神经网络的训练逻辑&#34;&gt;C. 经典神经网络的训练逻辑&lt;/h2&gt;
-&lt;h3 id=&#34;批量梯度下降&#34;&gt;批量梯度下降&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;公式a&lt;/strong&gt;：以batch_size=10为例&lt;/p&gt;</description>
+&lt;h3 id=&#34;dataloader&#34;&gt;DataLoader&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;一个迭代器&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;pbar = tqdm(enumerate(attack_loader), total=len(attack_loader)) 
+    for index, (_, abun, abun_sum, noise, labels, _) in pbar: 
+    # 每次迭代使用一个batch的数据来更新扰动（正常32个，但如果最后一组样本量不足32，那就不足32，不舍弃）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用for迭代，每次迭代使用一个batch的数据来更新扰动（正常32个，但如果最后一组样本量不足32，那就不足32，不舍弃）&lt;/p&gt;</description>
     </item>
     <item>
       <title>视觉_K230开发实践</title>
