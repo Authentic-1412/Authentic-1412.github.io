@@ -6,8 +6,82 @@
     <description>Recent content in Posts on pearl blog</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 24 Nov 2025 20:41:51 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 03 Dec 2025 16:59:26 +0800</lastBuildDate>
     <atom:link href="https://Authentic-1412.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Stm32小车电路设计</title>
+      <link>https://Authentic-1412.github.io/posts/stm32%E5%B0%8F%E8%BD%A6%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Wed, 03 Dec 2025 16:59:26 +0800</pubDate>
+      <guid>https://Authentic-1412.github.io/posts/stm32%E5%B0%8F%E8%BD%A6%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1/</guid>
+      <description>&lt;h1 id=&#34;元件引脚功能&#34;&gt;元件引脚功能&lt;/h1&gt;
+&lt;h2 id=&#34;tb6612&#34;&gt;tb6612&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;左列(连接单片机)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;PWMA：控制A电机转速 通过PWM的占空比控制电机转速&lt;/li&gt;
+&lt;li&gt;AIN1：和AIN2一起控制A电机转向，电平高低变为0-1信号，即通过两边施力与否控制转向，两两组合：
+&lt;ul&gt;
+&lt;li&gt;0-1：正转&lt;/li&gt;
+&lt;li&gt;1-0：反转&lt;/li&gt;
+&lt;li&gt;0-0：空档（两侧均不施力）&lt;/li&gt;
+&lt;li&gt;1-1：刹车（两侧同时施力）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;AIN2&lt;/li&gt;
+&lt;li&gt;STBY：控制驱动模块是否工作的开关&lt;/li&gt;
+&lt;li&gt;BIN1：类似AIN1&lt;/li&gt;
+&lt;li&gt;BIN2&lt;/li&gt;
+&lt;li&gt;PWMB&lt;/li&gt;
+&lt;li&gt;GND： 连接单片机接地&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;右列（连接电机）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VM：M指的是machine，也就是驱动电机需要的电压（一般为高电压，4.5-15v不等）&lt;/li&gt;
+&lt;li&gt;VCC：cc：逻辑电路，指的是让tb6612这块板子运行起来的电压，一般为3.3v或5v&lt;/li&gt;
+&lt;li&gt;GND：电机接地&lt;/li&gt;
+&lt;li&gt;AO1：连A电机&lt;/li&gt;
+&lt;li&gt;AO2：连B电机&lt;/li&gt;
+&lt;li&gt;BO1&lt;/li&gt;
+&lt;li&gt;BO2&lt;/li&gt;
+&lt;li&gt;GND：电机接地&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;这三个GND要共地，否则会故障。出现问题时检查是否共地&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;霍尔编码器&#34;&gt;霍尔编码器&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;VCC：3.3v&lt;/li&gt;
+&lt;li&gt;GND&lt;/li&gt;
+&lt;li&gt;A相：接单片机脉冲检测接口&lt;/li&gt;
+&lt;li&gt;B相&lt;/li&gt;
+&lt;li&gt;M+：电机接口，接tb6612的AO1&lt;/li&gt;
+&lt;li&gt;M-：AO2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;oled屏幕&#34;&gt;oled屏幕&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;VCC&lt;/li&gt;
+&lt;li&gt;GND&lt;/li&gt;
+&lt;li&gt;SCL：接单片机 用于IIC通信&lt;/li&gt;
+&lt;li&gt;SDA：同上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;mpu6050&#34;&gt;MPU6050&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;VCC&lt;/li&gt;
+&lt;li&gt;GND&lt;/li&gt;
+&lt;li&gt;SCL&lt;/li&gt;
+&lt;li&gt;SDA&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;剩余引脚用于连接电磁传感器形成九轴传感器&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
     <item>
       <title>HSI攻击</title>
       <link>https://Authentic-1412.github.io/posts/hsi%E6%94%BB%E5%87%BB/</link>
