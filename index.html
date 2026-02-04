@@ -132,6 +132,28 @@
 
 <article class="first-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">远程服务器文件传输
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>以传输HSI_ATTACK2代码为例
+查看子文件夹大小 linux：在母目录下输入：
+du -h –max-depth=1 | sort -hr
+-h：hunman redable，人类可读 –max-depth=1：最大深度，为1则只统计下一级目录的大小，不会具体到文件 |：管道，把数据传输到sort管道里 -hr：按易读数字反向排序，h指明白1G比200M大，r指reverse，逆序 结果： 把占用大的数据通过rsync传输，git仅传输代码
+1. Git git不能传输过大文件夹，例如这里的10G直接push会连接超时
+1.1. .gitignore 把不想要的文件类型或文件目录写入.gitignore
+bash: nano .gitignore # 创建并打开.gitignore文件 # 写入 params/ logs/ RESREPORT/ dataset/ abundance_matrix/ # ^X退出编辑 查看文件
+bash: cat .gitignore # 用于查看简短文件 直接将文件内容输出在终端 less .gitignore # 查看长文件 可翻页 按q退出 1.2. 在服务器上建仓库 之前仓库一直都建立在github上，而仓库也可以建立在服务器上，而且仓库可以不托管源代码，只托管代码的“基因”，也就是–bare，通过克隆仓库复原源代码
+（本地的wsl上：） 从用du查看的目录大小可以发现，.git托管了所有代码的所有更改，特别臃肿，所以删掉
+rm -rf .git 重新初始化(在本地的HSI_ATTACK2目录下) git init 确保已经编辑好.gitignore后，将更改加入暂存区 git add . 从暂存区提交到本地仓库（.git） git commit -m “Initial commit”
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-02 12:05:48 +0800 CST'>February 2, 2026</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <a class="entry-link" aria-label="post link to 远程服务器文件传输" href="https://Authentic-1412.github.io/posts/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Stm32小车电路设计
     </h2>
   </header>
@@ -213,7 +235,7 @@ Part 1. hugo搭建并在本地预览 25.11.10. 创建博客总站 新建文件�
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="https://Authentic-1412.github.io/">pearl blog</a></span> · 
+        <span>&copy; 2026 <a href="https://Authentic-1412.github.io/">pearl blog</a></span> · 
 
     <span>
         Powered by
