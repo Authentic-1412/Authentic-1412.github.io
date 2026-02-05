@@ -126,6 +126,26 @@
             </div>
         </div>
         <ul id="menu">
+            <li>
+                <a href="https://Authentic-1412.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Authentic-1412.github.io/posts/" title="Posts">
+                    <span class="active">Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Authentic-1412.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Authentic-1412.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -145,16 +165,19 @@
     <p>以传输HSI_ATTACK2代码为例
 查看子文件夹大小 linux：在母目录下输入：
 du -h –max-depth=1 | sort -hr
--h：hunman redable，人类可读 –max-depth=1：最大深度，为1则只统计下一级目录的大小，不会具体到文件 |：管道，把数据传输到sort管道里 -hr：按易读数字反向排序，h指明白1G比200M大，r指reverse，逆序 结果： 把占用大的数据通过rsync传输，git仅传输代码
+-h：hunman redable，人类可读 –max-depth=1：最大深度，为1则只统计下一级目录的大小，不会具体到文件 |：管道，把数据传输到sort管道里 -hr：按易读数字反向排序，h指明白1G比200M大，r指reverse，逆序
+结果：
+把占用大的数据通过rsync传输，git仅传输代码
 1. Git git不能传输过大文件夹，例如这里的10G直接push会连接超时
 1.1. .gitignore 把不想要的文件类型或文件目录写入.gitignore
 bash: nano .gitignore # 创建并打开.gitignore文件 # 写入 params/ logs/ RESREPORT/ dataset/ abundance_matrix/ # ^X退出编辑 查看文件
 bash: cat .gitignore # 用于查看简短文件 直接将文件内容输出在终端 less .gitignore # 查看长文件 可翻页 按q退出 1.2. 在服务器上建仓库 之前仓库一直都建立在github上，而仓库也可以建立在服务器上，而且仓库可以不托管源代码，只托管代码的“基因”，也就是–bare，通过克隆仓库复原源代码
-（本地的wsl上：） 从用du查看的目录大小可以发现，.git托管了所有代码的所有更改，特别臃肿，所以删掉
+（本地的wsl上：）
+从用du查看的目录大小可以发现，.git托管了所有代码的所有更改，特别臃肿，所以删掉
 rm -rf .git 重新初始化(在本地的HSI_ATTACK2目录下) git init 确保已经编辑好.gitignore后，将更改加入暂存区 git add . 从暂存区提交到本地仓库（.git） git commit -m “Initial commit”
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-02 12:05:48 +0800 CST'>February 2, 2026</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <footer class="entry-footer"><span title='2026-02-02 12:05:48 +0800 CST'>February 2, 2026</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>pearl</span></footer>
   <a class="entry-link" aria-label="post link to 远程服务器文件传输" href="https://Authentic-1412.github.io/posts/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/"></a>
 </article>
 
@@ -169,7 +192,7 @@ PWMA：控制A电机转速 通过PWM的占空比控制电机转速 AIN1：和AIN
 VM：M指的是machine，也就是驱动电机需要的电压（一般为高电压，4.5-15v不等） VCC：cc：逻辑电路，指的是让tb6612这块板子运行起来的电压，一般为3.3v或5v GND：电机接地 AO1：连A电机M&#43; AO2：M- BO1：连B电机M- BO2: M&#43; GND：电机接地 这三个GND要共地，否则会故障。出现问题时检查是否共地 霍尔编码器 VCC：3.3v GND A相：接单片机脉冲检测接口 B相 M&#43;：电机接口，接tb6612的AO1 M-：AO2 oled屏幕 VCC GND SCL：接单片机 用于IIC通信 SDA：同上 MPU6050 VCC GND SCL SDA 剩余引脚用于连接电磁传感器形成九轴传感器
 </p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-03 16:59:26 +0800 CST'>December 3, 2025</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <footer class="entry-footer"><span title='2025-12-03 16:59:26 +0800 CST'>December 3, 2025</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>pearl</span></footer>
   <a class="entry-link" aria-label="post link to Stm32小车电路设计" href="https://Authentic-1412.github.io/posts/stm32%E5%B0%8F%E8%BD%A6%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1/"></a>
 </article>
 
@@ -185,11 +208,14 @@ Indian pine 只有一张图片，分辨率为145*145
 这张图拍的主要为农作物，共有16个类别，即10249个样本对应16个类别，包括草地、玉米地、林地等
 Indian Pines 数据集的规模: 145*145*200 (width height 波段数)
 下载得到的数据集形式
-Indian_pines.mat ：原始的Indian Pines 数据集: 145*145*220 Indian_pines_corrected.mat 矫正后的Indian Pines 数据集: 145*145*200 Indian_pines_gt.mat 标签矩阵 145*145 部分内容引自知乎
-AVIRIS 成像光谱仪成像波长范围为 0.4-2.5μm，是在连续的 220 个波段对地物连续成像的，但是由于第 104-108，第 150-163 和第 220 个波段不能被水反射，因此，我们一般使用的是剔除了这 20 个波段后剩下的 200 个波段作为研究的对象。 145*145 = 21025=10776（背景，黑）&#43; 10249（多种地物，彩） &gt; 10249 = 各类地物占得像素个数。 解混 我们对丰度矩阵A添加扰动，丰度矩阵表示每个像素中不同端元的占比，端元库表示不同端元（纯净）在光谱中200个波段下的值 B. Universal Perturbation 算法：在每一轮迭代中都找到$\Delta v$ C. 经典神经网络的训练逻辑 DataLoader 一个迭代器 pbar = tqdm(enumerate(attack_loader), total=len(attack_loader)) for index, (_, abun, abun_sum, noise, labels, _) in pbar: # 每次迭代使用一个batch的数据来更新扰动（正常32个，但如果最后一组样本量不足32，那就不足32，不舍弃） 用for迭代，每次迭代使用一个batch的数据来更新扰动（正常32个，但如果最后一组样本量不足32，那就不足32，不舍弃）
+Indian_pines.mat ：原始的Indian Pines 数据集: 145*145*220
+Indian_pines_corrected.mat 矫正后的Indian Pines 数据集: 145*145*200
+Indian_pines_gt.mat 标签矩阵 145*145 部分内容引自知乎
+AVIRIS 成像光谱仪成像波长范围为 0.4-2.5μm，是在连续的 220 个波段对地物连续成像的，但是由于第 104-108，第 150-163 和第 220 个波段不能被水反射，因此，我们一般使用的是剔除了这 20 个波段后剩下的 200 个波段作为研究的对象。 145*145 = 21025=10776（背景，黑）&#43; 10249（多种地物，彩）
+&gt; 10249 = 各类地物占得像素个数。 解混 我们对丰度矩阵A添加扰动，丰度矩阵表示每个像素中不同端元的占比，端元库表示不同端元（纯净）在光谱中200个波段下的值 B. Universal Perturbation 算法：在每一轮迭代中都找到$\Delta v$ C. 经典神经网络的训练逻辑 DataLoader 一个迭代器 pbar = tqdm(enumerate(attack_loader), total=len(attack_loader)) for index, (_, abun, abun_sum, noise, labels, _) in pbar: # 每次迭代使用一个batch的数据来更新扰动（正常32个，但如果最后一组样本量不足32，那就不足32，不舍弃） 用for迭代，每次迭代使用一个batch的数据来更新扰动（正常32个，但如果最后一组样本量不足32，那就不足32，不舍弃）
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-24 20:41:51 +0800 CST'>November 24, 2025</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <footer class="entry-footer"><span title='2025-11-24 20:41:51 +0800 CST'>November 24, 2025</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>pearl</span></footer>
   <a class="entry-link" aria-label="post link to HSI攻击" href="https://Authentic-1412.github.io/posts/hsi%E6%94%BB%E5%87%BB/"></a>
 </article>
 
@@ -201,10 +227,17 @@ AVIRIS 成像光谱仪成像波长范围为 0.4-2.5μm，是在连续的 220 个
   <div class="entry-content">
     <p>记录学习k230的过程
 25.11.11 准备工作、学习摄像模块 准备工作 固件烧录 例程复现 找到了ocr（文字识别）现成例程 小声：结合多平台教程文档，如01studio或嘉楠等等，这个没有的例程，另一个说不定有呢 摄像模块 k230摄像头架构 板子最多搭载三个摄像头 每个摄像头可以接入三个不同的处理模块（对输入图像进行加工处理） 每个模块（camera_device）有三个输出通道，可以多输出并行 摄像头模块编程 sensor基础语法
-创建处理模块 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2 width ,height ,fps:最大输出图像参数 设置图像输出大小和位置 sensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。 framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸 chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置 sensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。 常用有： RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭
+创建处理模块 1 2 from media.sensor import * sensor = Sensor(id ,width ,height ,fps) # 实例化，对应架构中的处理模块 id：摄像头id，默认为2
+width ,height ,fps:最大输出图像参数 设置图像输出大小和位置
+1 2 3 4 sensor.reset() # 初始化sensor对象及传感器 sensor.set_framesize(chn=CAM_CHN_ID_0, width=640, height=480) sensor.set_framesize(chn=CAM_CHN_ID_3, framesize = Sensor.VGA) framesize参数对应width、height，表示输出图像分辨率，二者作用相同。
+framesize = Sensor.VGA即表示640*480分辨率，除此之外，还有Sensor.HD等表示分辨率的代号，这些代号统称为图像帧尺寸
+chn:channel_number,表示输出通道，即架构中每个模块的三个输出通道 设置图像怎么输出、输出位置
+sensor.set_pixformat(pix_format, chn=CAM_CHN_ID_0) pix_format:输出图像的像素格式，即每个像素在计算机中如何存储，也就是RGB三个通道数据用多少位存储。
+常用有：
+RGB565：R for 5 bits ; G for 6 bits ; B for 5 bits RGB888: R G B for 8 bits respectively 水平与竖直反转 sensor.set_hmirror(True) # 水平 sensor.set_vflip(False) # 竖直 启动、关闭摄像头 sensor.run() sensor.stop() 多个摄像头只用启动一次，但要分别关闭
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-11 21:57:27 +0800 CST'>November 11, 2025</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <footer class="entry-footer"><span title='2025-11-11 21:57:27 +0800 CST'>November 11, 2025</span>&nbsp;·&nbsp;<span>11 min</span>&nbsp;·&nbsp;<span>pearl</span></footer>
   <a class="entry-link" aria-label="post link to 视觉_K230开发实践" href="https://Authentic-1412.github.io/posts/%E8%A7%86%E8%A7%89-k230%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5/"></a>
 </article>
 
@@ -215,15 +248,20 @@ AVIRIS 成像光谱仪成像波长范围为 0.4-2.5μm，是在连续的 220 个
   </header>
   <div class="entry-content">
     <p>个人博客搭建 ==========================================================
-Part 1. hugo搭建并在本地预览 25.11.10. 创建博客总站 新建文件夹，存放你的博客。在该文件夹下运行 hugo new site . -初始化站点
+Part 1. hugo搭建并在本地预览 25.11.10. 创建博客总站 新建文件夹，存放你的博客。在该文件夹下运行 hugo new site .
+-初始化站点
 创建一篇文章 hugo new posts/这篇博客的名字.md
 然后，你可以看到在content/posts目录下多了一个md文档 编辑完成后将draft改为false，否则不在网页上显示 主题 git clone你喜欢的主题，并将文件复制到themes文件夹下 在hugo.toml（参数文档）中增加： theme = “hugo-PaperMod” 别忘记双引号！
-其他设置 在hugo.toml（参数文档）中 [params] description = “my first blog” author = “pearl”
+其他设置 在hugo.toml（参数文档）中 [params]
+description = “my first blog”
+author = “pearl”
 本地预览 终端输入 hugo server
 打开终端显示的域名即可 25.11.11 1. 补充：wsl中配置代理 之前登录时wsl会提示： wsl: 检测到 localhost 代理配置，但未镜像到 WSL。NAT 模式下的 WSL 不支持 localhost 代理。
+这句话有两点值得注意
+NAT模式：相当于wsl2运行在一个小虚拟机中，该虚拟机有自己的ip：通常为172. 镜像模式：作为localhost（windows本机）的镜像映射，windows有啥，wsl就有啥 配置WSL镜像 windows的用户目录（30743）下新建建立新文件.wslconfig并写入： [wsl2] networkingMode=mirrored&lt; autoProxy=true 重启wsl 提示消失，wsl可以访问github Part 2. 部署到git page 25.11.14 根据网上“hugo &#43; git page”教程配置即可 注意
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-10 00:00:15 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <footer class="entry-footer"><span title='2025-11-10 00:00:15 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>pearl</span></footer>
   <a class="entry-link" aria-label="post link to 个人博客学习笔记" href="https://Authentic-1412.github.io/posts/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"></a>
 </article>
 
@@ -235,7 +273,7 @@ Part 1. hugo搭建并在本地预览 25.11.10. 创建博客总站 新建文件�
   <div class="entry-content">
     <p>Hello World! I have borned!</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-09 22:27:38 +0800 CST'>November 9, 2025</span>&nbsp;·&nbsp;<span>pearl</span></footer>
+  <footer class="entry-footer"><span title='2025-11-09 22:27:38 +0800 CST'>November 9, 2025</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>pearl</span></footer>
   <a class="entry-link" aria-label="post link to My First Post" href="https://Authentic-1412.github.io/posts/my-first-post/"></a>
 </article>
     </main>
