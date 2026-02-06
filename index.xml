@@ -6,14 +6,62 @@
     <description>Recent content on pearl blog</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 02 Feb 2026 12:05:48 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 06 Feb 2026 17:09:54 +0800</lastBuildDate>
     <atom:link href="https://Authentic-1412.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>远程服务器常用命令</title>
+      <link>https://Authentic-1412.github.io/posts/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Fri, 06 Feb 2026 17:09:54 +0800</pubDate>
+      <guid>https://Authentic-1412.github.io/posts/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;abstract：记录在远程服务器跑代码遇到的问题和常用的命令行语句&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;story&lt;/strong&gt;：公用服务器上改代码，显存爆炸后差点把同门进程给杀了，故作此文以记录&lt;/p&gt;
+&lt;h2 id=&#34;查看gpu状态&#34;&gt;查看GPU状态&lt;/h2&gt;
+&lt;h3 id=&#34;nvidia-smi&#34;&gt;&lt;code&gt;nvidia-smi&lt;/code&gt;:&lt;/h3&gt;
+&lt;p&gt;&lt;img alt=&#34;gpu&#34; loading=&#34;lazy&#34; src=&#34;https://Authentic-1412.github.io/image/gpu.png&#34;&gt;
+&lt;strong&gt;关注这几个点：&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;上半张表：GPU信息&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Memory-Usage&lt;/strong&gt;：显存&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Volatile GPU-Util&lt;/strong&gt;：GPU利用率&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;下半张表：进程信息&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;PID&lt;/strong&gt;：进程号（你会发现1152339进程占了两张卡）&lt;/li&gt;
+&lt;li&gt;xorg：Linux的图形化驱动，不用管&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;GPU0上1152339进程占了11个G，这就是我显存炸掉的罪魁祸首！我的进程需要的显存大于24-11=13G，自动卡退了
+这个进程是谁的呢？&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;进程&#34;&gt;进程&lt;/h2&gt;
+&lt;h3 id=&#34;kill--9-1152339&#34;&gt;&lt;code&gt;kill -9 1152339&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;强行杀死进程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;ps--u--p-1152339&#34;&gt;&lt;code&gt;ps -u -p 1152339&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看看这个进程是谁的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;ps--ef--grep-1152339&#34;&gt;&lt;code&gt;ps -ef | grep 1152339&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;搜索所有含有“1152339”名字的进程，并显示完整信息&lt;/li&gt;
+&lt;li&gt;还可以&lt;code&gt;ps -ef | grep yourusername&lt;/code&gt;,查看和你有关的所有进程&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
     <item>
       <title>远程服务器文件传输</title>
       <link>https://Authentic-1412.github.io/posts/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/</link>
-      <pubDate>Mon, 02 Feb 2026 12:05:48 +0800</pubDate>
+      <pubDate>Fri, 06 Feb 2026 17:09:54 +0800</pubDate>
       <guid>https://Authentic-1412.github.io/posts/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/</guid>
-      <description>&lt;p&gt;以传输HSI_ATTACK2代码为例&lt;/p&gt;
+      <description>&lt;p&gt;&lt;strong&gt;abstract：如何把一份10G的代码从本地传输到远程服务器&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;story&lt;/strong&gt;：原来git也会被push死&lt;/p&gt;
+&lt;p&gt;以传输HSI_ATTACK2代码为例&lt;/p&gt;
 &lt;h1 id=&#34;查看子文件夹大小&#34;&gt;查看子文件夹大小&lt;/h1&gt;
 &lt;p&gt;linux：在母目录下输入：&lt;/p&gt;
 &lt;blockquote&gt;

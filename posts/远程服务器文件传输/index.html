@@ -6,8 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
 <title>远程服务器文件传输 | pearl blog</title>
-<meta name="keywords" content="">
-<meta name="description" content="以传输HSI_ATTACK2代码为例
+<meta name="keywords" content="远程开发, Linux, wsl">
+<meta name="description" content="abstract：如何把一份10G的代码从本地传输到远程服务器
+story：原来git也会被push死
+以传输HSI_ATTACK2代码为例
 查看子文件夹大小
 linux：在母目录下输入：
 
@@ -122,7 +124,9 @@ git commit -m &ldquo;Initial commit&rdquo;">
 </script><meta property="og:url" content="https://Authentic-1412.github.io/posts/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/">
   <meta property="og:site_name" content="pearl blog">
   <meta property="og:title" content="远程服务器文件传输">
-  <meta property="og:description" content="以传输HSI_ATTACK2代码为例
+  <meta property="og:description" content="abstract：如何把一份10G的代码从本地传输到远程服务器
+story：原来git也会被push死
+以传输HSI_ATTACK2代码为例
 查看子文件夹大小 linux：在母目录下输入：
 du -h –max-depth=1 | sort -hr
 -h：hunman redable，人类可读 –max-depth=1：最大深度，为1则只统计下一级目录的大小，不会具体到文件 |：管道，把数据传输到sort管道里 -hr：按易读数字反向排序，h指明白1G比200M大，r指reverse，逆序
@@ -138,11 +142,16 @@ rm -rf .git 重新初始化(在本地的HSI_ATTACK2目录下) git init 确保已
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-02-02T12:05:48+08:00">
-    <meta property="article:modified_time" content="2026-02-02T12:05:48+08:00">
+    <meta property="article:published_time" content="2026-02-06T17:09:54+08:00">
+    <meta property="article:modified_time" content="2026-02-06T17:09:54+08:00">
+    <meta property="article:tag" content="远程开发">
+    <meta property="article:tag" content="Linux">
+    <meta property="article:tag" content="Wsl">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="远程服务器文件传输">
-<meta name="twitter:description" content="以传输HSI_ATTACK2代码为例
+<meta name="twitter:description" content="abstract：如何把一份10G的代码从本地传输到远程服务器
+story：原来git也会被push死
+以传输HSI_ATTACK2代码为例
 查看子文件夹大小
 linux：在母目录下输入：
 
@@ -220,15 +229,15 @@ git commit -m &ldquo;Initial commit&rdquo;">
   "@type": "BlogPosting",
   "headline": "远程服务器文件传输",
   "name": "远程服务器文件传输",
-  "description": "以传输HSI_ATTACK2代码为例\n查看子文件夹大小 linux：在母目录下输入：\ndu -h \u0026ndash;max-depth=1 | sort -hr\n-h：hunman redable，人类可读 \u0026ndash;max-depth=1：最大深度，为1则只统计下一级目录的大小，不会具体到文件 |：管道，把数据传输到sort管道里 -hr：按易读数字反向排序，h指明白1G比200M大，r指reverse，逆序\n结果：\n把占用大的数据通过rsync传输，git仅传输代码\n1. Git git不能传输过大文件夹，例如这里的10G直接push会连接超时\n1.1. .gitignore 把不想要的文件类型或文件目录写入.gitignore\nbash: nano .gitignore # 创建并打开.gitignore文件 # 写入 params/ logs/ RESREPORT/ dataset/ abundance_matrix/ # ^X退出编辑 查看文件\nbash: cat .gitignore # 用于查看简短文件 直接将文件内容输出在终端 less .gitignore # 查看长文件 可翻页 按q退出 1.2. 在服务器上建仓库 之前仓库一直都建立在github上，而仓库也可以建立在服务器上，而且仓库可以不托管源代码，只托管代码的“基因”，也就是\u0026ndash;bare，通过克隆仓库复原源代码\n（本地的wsl上：）\n从用du查看的目录大小可以发现，.git托管了所有代码的所有更改，特别臃肿，所以删掉\nrm -rf .git 重新初始化(在本地的HSI_ATTACK2目录下) git init 确保已经编辑好.gitignore后，将更改加入暂存区 git add . 从暂存区提交到本地仓库（.git） git commit -m \u0026ldquo;Initial commit\u0026rdquo;\n",
+  "description": "abstract：如何把一份10G的代码从本地传输到远程服务器\nstory：原来git也会被push死\n以传输HSI_ATTACK2代码为例\n查看子文件夹大小 linux：在母目录下输入：\ndu -h \u0026ndash;max-depth=1 | sort -hr\n-h：hunman redable，人类可读 \u0026ndash;max-depth=1：最大深度，为1则只统计下一级目录的大小，不会具体到文件 |：管道，把数据传输到sort管道里 -hr：按易读数字反向排序，h指明白1G比200M大，r指reverse，逆序\n结果：\n把占用大的数据通过rsync传输，git仅传输代码\n1. Git git不能传输过大文件夹，例如这里的10G直接push会连接超时\n1.1. .gitignore 把不想要的文件类型或文件目录写入.gitignore\nbash: nano .gitignore # 创建并打开.gitignore文件 # 写入 params/ logs/ RESREPORT/ dataset/ abundance_matrix/ # ^X退出编辑 查看文件\nbash: cat .gitignore # 用于查看简短文件 直接将文件内容输出在终端 less .gitignore # 查看长文件 可翻页 按q退出 1.2. 在服务器上建仓库 之前仓库一直都建立在github上，而仓库也可以建立在服务器上，而且仓库可以不托管源代码，只托管代码的“基因”，也就是\u0026ndash;bare，通过克隆仓库复原源代码\n（本地的wsl上：）\n从用du查看的目录大小可以发现，.git托管了所有代码的所有更改，特别臃肿，所以删掉\nrm -rf .git 重新初始化(在本地的HSI_ATTACK2目录下) git init 确保已经编辑好.gitignore后，将更改加入暂存区 git add . 从暂存区提交到本地仓库（.git） git commit -m \u0026ldquo;Initial commit\u0026rdquo;\n",
   "keywords": [
-    
+    "远程开发", "Linux", "wsl"
   ],
-  "articleBody": "以传输HSI_ATTACK2代码为例\n查看子文件夹大小 linux：在母目录下输入：\ndu -h –max-depth=1 | sort -hr\n-h：hunman redable，人类可读 –max-depth=1：最大深度，为1则只统计下一级目录的大小，不会具体到文件 |：管道，把数据传输到sort管道里 -hr：按易读数字反向排序，h指明白1G比200M大，r指reverse，逆序\n结果：\n把占用大的数据通过rsync传输，git仅传输代码\n1. Git git不能传输过大文件夹，例如这里的10G直接push会连接超时\n1.1. .gitignore 把不想要的文件类型或文件目录写入.gitignore\nbash: nano .gitignore # 创建并打开.gitignore文件 # 写入 params/ logs/ RESREPORT/ dataset/ abundance_matrix/ # ^X退出编辑 查看文件\nbash: cat .gitignore # 用于查看简短文件 直接将文件内容输出在终端 less .gitignore # 查看长文件 可翻页 按q退出 1.2. 在服务器上建仓库 之前仓库一直都建立在github上，而仓库也可以建立在服务器上，而且仓库可以不托管源代码，只托管代码的“基因”，也就是–bare，通过克隆仓库复原源代码\n（本地的wsl上：）\n从用du查看的目录大小可以发现，.git托管了所有代码的所有更改，特别臃肿，所以删掉\nrm -rf .git 重新初始化(在本地的HSI_ATTACK2目录下) git init 确保已经编辑好.gitignore后，将更改加入暂存区 git add . 从暂存区提交到本地仓库（.git） git commit -m “Initial commit”\n（服务器上：）\n回到家目录：\ncd ~ （查看家目录指的是哪个目录：） echo $HOME 创建一个仓库文件夹，并cd进去： mkdir HSI_ATTACK2.git cd HSI_ATTACK2.git 初始化，并且只记录版本更新信息，不记录源代码（可以根据这些信息还原源代码） git init –bare\n现在这个仓库是空的，要从本机推代码过来。\n（本地wsl上：）\n本地的仓库没有关联远程仓库，故先关联\ngit remote add origin ssh://user@ip:6000/home1/xiechenzhangzhu/HSI_ATTACK2.git 其中origin是给后面那一坨仓库起的名字，后面那一坨是origin的地址，跟在GitHub上面copy下来的http阿巴阿巴是一个意思，告诉本地文件要连接的远程仓库在哪\n把本地仓库的代码（main分支）推送给远程仓库origin的main分支： git push -u origin main\n（远程服务器上：）\n把这个仓库克隆到这个服务器上\ngit clone ~/HSI_ATTACK2.git HSI_WORK\ngit clone 仓库地址 克隆后文件夹 注意，克隆后会在家目录下生成一个HSI_WORK文件夹，若为空，则是没有打开含有文件的分支。进入该文件夹，查看当前分支\ngit branch # 带*的是当前分支 进入有内容的分支 git chekout 分支名 此时克隆后的文件夹中就会有源代码了\n2. rsync okay，源代码通过git传过去了，大的数据用rsync慢慢传。windows系统盘的文件都在wsl的mnt目录下，在wsl打开要传的目录：\nrsync -avzP -e ‘ssh -p 6000’ ./params ./abundance_matrix ./dataset xiechenzhangzhu@cois.cloud:~/\n-a：最常用,保证文件夹递归同步，并保留文件的修改时间、权限、软链接等属性\n-v：保证文件夹递归同步，并保留文件的修改时间、权限、软链接等属性\n-z：在传输过程中对数据进行压缩，减少带宽占用\n-p：最重要！中断了可以从中断的地方开始继续传，不用重头开始\n-e ‘ssh -p 6000’：指定远程端口\n./params ./abundance_matrix ./dataset ：要传输的文件夹们的路径：目录A 目录B 目录C\n重点！！！：\n1. 如果末尾不带/，如这里所示，把 params 文件夹本身搬过去。结果：~/params/…\n2. 如果结尾带/，./params/，则把 params 文件夹里面的内容搬过去，内容直接散落在 ~/ 下\nxiechenzhangzhu@cois.cloud:~/：远程服务器:目标目录，指明要把文件放在哪\n",
-  "wordCount" : "160",
+  "articleBody": "abstract：如何把一份10G的代码从本地传输到远程服务器\nstory：原来git也会被push死\n以传输HSI_ATTACK2代码为例\n查看子文件夹大小 linux：在母目录下输入：\ndu -h –max-depth=1 | sort -hr\n-h：hunman redable，人类可读 –max-depth=1：最大深度，为1则只统计下一级目录的大小，不会具体到文件 |：管道，把数据传输到sort管道里 -hr：按易读数字反向排序，h指明白1G比200M大，r指reverse，逆序\n结果：\n把占用大的数据通过rsync传输，git仅传输代码\n1. Git git不能传输过大文件夹，例如这里的10G直接push会连接超时\n1.1. .gitignore 把不想要的文件类型或文件目录写入.gitignore\nbash: nano .gitignore # 创建并打开.gitignore文件 # 写入 params/ logs/ RESREPORT/ dataset/ abundance_matrix/ # ^X退出编辑 查看文件\nbash: cat .gitignore # 用于查看简短文件 直接将文件内容输出在终端 less .gitignore # 查看长文件 可翻页 按q退出 1.2. 在服务器上建仓库 之前仓库一直都建立在github上，而仓库也可以建立在服务器上，而且仓库可以不托管源代码，只托管代码的“基因”，也就是–bare，通过克隆仓库复原源代码\n（本地的wsl上：）\n从用du查看的目录大小可以发现，.git托管了所有代码的所有更改，特别臃肿，所以删掉\nrm -rf .git 重新初始化(在本地的HSI_ATTACK2目录下) git init 确保已经编辑好.gitignore后，将更改加入暂存区 git add . 从暂存区提交到本地仓库（.git） git commit -m “Initial commit”\n（服务器上：）\n回到家目录：\ncd ~ （查看家目录指的是哪个目录：） echo $HOME 创建一个仓库文件夹，并cd进去： mkdir HSI_ATTACK2.git cd HSI_ATTACK2.git 初始化，并且只记录版本更新信息，不记录源代码（可以根据这些信息还原源代码） git init –bare\n现在这个仓库是空的，要从本机推代码过来。\n（本地wsl上：）\n本地的仓库没有关联远程仓库，故先关联\ngit remote add origin ssh://user@ip:6000/home1/xiechenzhangzhu/HSI_ATTACK2.git 其中origin是给后面那一坨仓库起的名字，后面那一坨是origin的地址，跟在GitHub上面copy下来的http阿巴阿巴是一个意思，告诉本地文件要连接的远程仓库在哪\n把本地仓库的代码（main分支）推送给远程仓库origin的main分支： git push -u origin main\n（远程服务器上：）\n把这个仓库克隆到这个服务器上\ngit clone ~/HSI_ATTACK2.git HSI_WORK\ngit clone 仓库地址 克隆后文件夹 注意，克隆后会在家目录下生成一个HSI_WORK文件夹，若为空，则是没有打开含有文件的分支。进入该文件夹，查看当前分支\ngit branch # 带*的是当前分支 进入有内容的分支 git chekout 分支名 此时克隆后的文件夹中就会有源代码了\n2. rsync okay，源代码通过git传过去了，大的数据用rsync慢慢传。windows系统盘的文件都在wsl的mnt目录下，在wsl打开要传的目录：\nrsync -avzP -e ‘ssh -p 6000’ ./params ./abundance_matrix ./dataset xiechenzhangzhu@cois.cloud:~/\n-a：最常用,保证文件夹递归同步，并保留文件的修改时间、权限、软链接等属性\n-v：保证文件夹递归同步，并保留文件的修改时间、权限、软链接等属性\n-z：在传输过程中对数据进行压缩，减少带宽占用\n-p：最重要！中断了可以从中断的地方开始继续传，不用重头开始\n-e ‘ssh -p 6000’：指定远程端口\n./params ./abundance_matrix ./dataset ：要传输的文件夹们的路径：目录A 目录B 目录C\n重点！！！：\n1. 如果末尾不带/，如这里所示，把 params 文件夹本身搬过去。结果：~/params/…\n2. 如果结尾带/，./params/，则把 params 文件夹里面的内容搬过去，内容直接散落在 ~/ 下\nxiechenzhangzhu@cois.cloud:~/：远程服务器:目标目录，指明要把文件放在哪\n",
+  "wordCount" : "162",
   "inLanguage": "en",
-  "datePublished": "2026-02-02T12:05:48+08:00",
-  "dateModified": "2026-02-02T12:05:48+08:00",
+  "datePublished": "2026-02-06T17:09:54+08:00",
+  "dateModified": "2026-02-06T17:09:54+08:00",
   "author":{
     "@type": "Person",
     "name": "pearl"
@@ -308,7 +317,7 @@ git commit -m &ldquo;Initial commit&rdquo;">
     <h1 class="post-title entry-hint-parent">
       远程服务器文件传输
     </h1>
-    <div class="post-meta"><span title='2026-02-02 12:05:48 +0800 CST'>February 2, 2026</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>pearl</span>
+    <div class="post-meta"><span title='2026-02-06 17:09:54 +0800 CST'>February 6, 2026</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>pearl</span>
 
 </div>
   </header> <div class="toc">
@@ -338,7 +347,9 @@ git commit -m &ldquo;Initial commit&rdquo;">
     </details>
 </div>
 
-  <div class="post-content"><p>以传输HSI_ATTACK2代码为例</p>
+  <div class="post-content"><p><strong>abstract：如何把一份10G的代码从本地传输到远程服务器</strong><br>
+<strong>story</strong>：原来git也会被push死</p>
+<p>以传输HSI_ATTACK2代码为例</p>
 <h1 id="查看子文件夹大小">查看子文件夹大小<a hidden class="anchor" aria-hidden="true" href="#查看子文件夹大小">#</a></h1>
 <p>linux：在母目录下输入：</p>
 <blockquote>
@@ -460,12 +471,15 @@ git chekout 分支名
 
   <footer class="post-footer">
     <ul class="post-tags">
+      <li><a href="https://Authentic-1412.github.io/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91/">远程开发</a></li>
+      <li><a href="https://Authentic-1412.github.io/tags/linux/">Linux</a></li>
+      <li><a href="https://Authentic-1412.github.io/tags/wsl/">Wsl</a></li>
     </ul>
 
 <ul class="share-buttons">
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share 远程服务器文件传输 on x"
-            href="https://x.com/intent/tweet/?text=%e8%bf%9c%e7%a8%8b%e6%9c%8d%e5%8a%a1%e5%99%a8%e6%96%87%e4%bb%b6%e4%bc%a0%e8%be%93&amp;url=https%3a%2f%2fAuthentic-1412.github.io%2fposts%2f%25E8%25BF%259C%25E7%25A8%258B%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8%25E6%2596%2587%25E4%25BB%25B6%25E4%25BC%25A0%25E8%25BE%2593%2f&amp;hashtags=">
+            href="https://x.com/intent/tweet/?text=%e8%bf%9c%e7%a8%8b%e6%9c%8d%e5%8a%a1%e5%99%a8%e6%96%87%e4%bb%b6%e4%bc%a0%e8%be%93&amp;url=https%3a%2f%2fAuthentic-1412.github.io%2fposts%2f%25E8%25BF%259C%25E7%25A8%258B%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8%25E6%2596%2587%25E4%25BB%25B6%25E4%25BC%25A0%25E8%25BE%2593%2f&amp;hashtags=%e8%bf%9c%e7%a8%8b%e5%bc%80%e5%8f%91%2cLinux%2cwsl">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
